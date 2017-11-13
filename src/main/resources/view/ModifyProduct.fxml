@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-
-<HBox prefHeight="455.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controller.ModifyProductController">
+<HBox prefHeight="455.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controller.ModifyProductController">
    <children>
       <VBox prefHeight="342.0" prefWidth="350.0" spacing="15.0">
          <children>
@@ -102,6 +101,9 @@
                         <TableColumn editable="false" prefWidth="99.5" text="Inventory Level" />
                         <TableColumn editable="false" prefWidth="90.0" text="Price per Unit" />
                     </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
                   </TableView>
                </children>
             </HBox>
@@ -119,6 +121,9 @@
                         <TableColumn editable="false" prefWidth="99.5" text="Inventory Level" />
                         <TableColumn editable="false" prefWidth="90.0" text="Price per Unit" />
                      </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
                   </TableView>
                </children>
             </HBox>
