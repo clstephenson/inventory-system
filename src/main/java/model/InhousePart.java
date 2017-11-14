@@ -1,10 +1,11 @@
 package main.java.model;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class InhousePart extends Part {
 
-    private IntegerProperty machineID;
+    private IntegerProperty machineID = new SimpleIntegerProperty();
     
     public InhousePart() {
         super();

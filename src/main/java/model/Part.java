@@ -2,24 +2,27 @@ package main.java.model;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public abstract class Part {
     
-    private IntegerProperty partID;
-    private StringProperty name;
-    private DoubleProperty price;
-    private IntegerProperty inStock;
-    private IntegerProperty min;
-    private IntegerProperty max;
+    private IntegerProperty partID = new SimpleIntegerProperty();
+    private StringProperty name = new SimpleStringProperty();
+    private DoubleProperty price = new SimpleDoubleProperty();
+    private IntegerProperty inStock = new SimpleIntegerProperty();
+    private IntegerProperty min = new SimpleIntegerProperty();
+    private IntegerProperty max = new SimpleIntegerProperty();
 
     public Part() {
-        this.setPartID(0);
-        this.setName("");
-        this.setPrice(0.00);
-        this.setInStock(0);
-        this.setMin(0);
-        this.setMax(0);
+        setPartID(0);
+        setName("");
+        setPrice(0.00);
+        setInStock(0);
+        setMin(0);
+        setMax(0);
     }
     
     public Part(int partID, String name, double price, int inStock, int min, int max) {

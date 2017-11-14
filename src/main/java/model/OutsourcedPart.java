@@ -1,10 +1,11 @@
 package main.java.model;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class OutsourcedPart extends Part {
 
-    private StringProperty companyName;
+    private StringProperty companyName = new SimpleStringProperty();
     
     public OutsourcedPart() {
         super();
