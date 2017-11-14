@@ -26,12 +26,12 @@ public abstract class Part {
     }
     
     public Part(int partID, String name, double price, int inStock, int min, int max) {
-        this.setPartID(partID);
-        this.setName(name);
-        this.setPrice(price);
-        this.setInStock(inStock);
-        this.setMin(min);
-        this.setMax(max);
+        setPartID(partID);
+        setName(name);
+        setPrice(price);
+        setInStock(inStock);
+        setMin(min);
+        setMax(max);
     }
 
     public final int getPartID() {
