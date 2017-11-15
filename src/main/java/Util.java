@@ -25,18 +25,12 @@ import javafx.stage.Stage;
 public class Util {
     
     public static Stage showModalWindow(String fxmlFileName, Button btnSrc, String title) {
-        
         Stage window = new Stage();
         Parent root = null;
         try {
             root = FXMLLoader.load(Util.class.getResource("/main/resources/view/" + fxmlFileName));
         } catch (Exception e) {
-            StringWriter sw = new StringWriter();
-            e.printStackTrace(new PrintWriter(sw));
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("An error has occurred in " + e.getClass().getName() + ".\n" + e.getMessage());
-            alert.getDialogPane().setExpandableContent(new ScrollPane(new TextArea(sw.toString())));
-            alert.showAndWait();
+            Util.showErrorMessage("Could not load " + fxmlFileName + ".", e);
         }
         window.setScene(new Scene(root));
         window.setTitle(title);
@@ -45,6 +39,32 @@ public class Util {
         window.initModality(Modality.APPLICATION_MODAL);
         window.showAndWait();
         return window;
+    }
+    
+    /**
+     * Display an error message to the user
+     * @param message Message to be displayed
+     */
+    public static void showErrorMessage(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(message);  
+        alert.showAndWait();
+    }
+    
+    /**
+     * Display an error message to the user, passing an exception object, and 
+     * printing the stack trace in the details
+     * @param message Message to be displayed
+     * @param e Exception object
+     */
+    public static void showErrorMessage(String message, Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(message);        
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        alert.getDialogPane().setExpandableContent(
+                new ScrollPane(new TextArea(sw.toString())));
+        alert.showAndWait();
     }
     
    
