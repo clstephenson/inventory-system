@@ -51,8 +51,7 @@ public class MainController {
 
     @FXML
     protected void handleExitButtonAction(ActionEvent event) {
-        throw new RuntimeException("not implemented");
-        //todo: implement handleExitButtonAction
+        Util.getStageFromActionEvent(event).close();
     }
     
     @FXML
@@ -69,15 +68,14 @@ public class MainController {
     
     @FXML
     protected void addPartButtonAction(ActionEvent event) {
-        //throw new RuntimeException("not implemented");
         //todo: implement addPartButtonAction
-        Stage window = Util.showModalWindow("1AddPart.fxml", (Button)event.getSource(), "Add Part");
+        Stage window = Util.showModalWindow("AddPart.fxml", Util.getStageFromActionEvent(event), "Add Part");
     }
     
     @FXML
     protected void modifyPartButtonAction(ActionEvent event) {
-        throw new RuntimeException("not implemented");
         //todo: implement modifyPartButtonAction
+        Stage window = Util.showModalWindow("ModifyPart.fxml", Util.getStageFromActionEvent(event), "Modify Part");
     }
     
     @FXML
@@ -88,13 +86,13 @@ public class MainController {
     
     @FXML
     protected void addProductButtonAction(ActionEvent event) {
-        throw new RuntimeException("not implemented");
+        Stage window = Util.showModalWindow("AddProduct.fxml", Util.getStageFromActionEvent(event), "Add Product");
         //todo: implement addProductButtonAction
     }
     
     @FXML
     protected void modifyProductButtonAction(ActionEvent event) {
-        throw new RuntimeException("not implemented");
+        Stage window = Util.showModalWindow("ModifyProduct.fxml", Util.getStageFromActionEvent(event), "Modify Product");
         //todo: implement modifyProductButtonAction
     }
     
@@ -103,4 +101,6 @@ public class MainController {
         throw new RuntimeException("not implemented");
         //todo: implement deleteProductButtonAction
     }
+    
+    
 }

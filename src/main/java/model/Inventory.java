@@ -34,7 +34,7 @@ public class Inventory {
     
     public void addPart(Part part) {
         // todo: implement addPart
-        throw new RuntimeException("not implemented");
+        allParts.add(part);
     }
     
     public boolean deletePart(int partID) {

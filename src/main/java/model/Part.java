@@ -9,6 +9,7 @@ import javafx.beans.property.StringProperty;
 
 public abstract class Part {
     
+    private static int lastPartID = 0;    
     private IntegerProperty partID = new SimpleIntegerProperty();
     private StringProperty name = new SimpleStringProperty();
     private DoubleProperty price = new SimpleDoubleProperty();
@@ -23,6 +24,7 @@ public abstract class Part {
         setInStock(0);
         setMin(0);
         setMax(0);
+        lastPartID++;
     }
     
     public Part(int partID, String name, double price, int inStock, int min, int max) {
@@ -32,6 +34,7 @@ public abstract class Part {
         setInStock(inStock);
         setMin(min);
         setMax(max);
+        lastPartID++;
     }
 
     public final int getPartID() {
@@ -80,6 +83,10 @@ public abstract class Part {
 
     public final void setMax(int max) {
         this.max.set(max);
+    }
+    
+    public static final int getNextPartID() {
+        return lastPartID + 1;
     }
     
 }

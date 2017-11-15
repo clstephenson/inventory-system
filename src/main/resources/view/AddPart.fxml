@@ -11,18 +11,17 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox prefHeight="342.0" prefWidth="350.0" spacing="15.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controller.AddPartController">
+<VBox prefHeight="342.0" prefWidth="350.0" spacing="15.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controller.AddPartController">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="30.0">
          <children>
             <Label text="Add Part" />
-            <RadioButton fx:id="inHouseRadioButton" mnemonicParsing="false" selected="true" text="In-House">
+            <RadioButton fx:id="inHouseRadioButton" mnemonicParsing="false" onAction="#handleInhouseRadioButtonAction" selected="true" text="In-House">
                <toggleGroup>
                   <ToggleGroup fx:id="partTypeToggleGroup" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="outsourcedRadioButton" layoutX="38.0" layoutY="10.0" mnemonicParsing="false" text="Outsourced" toggleGroup="$partTypeToggleGroup" />
+            <RadioButton fx:id="outsourcedRadioButton" layoutX="38.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleOutsourcedRadioButtonAction" text="Outsourced" toggleGroup="$partTypeToggleGroup" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -87,7 +86,7 @@
       </HBox>
       <StackPane>
          <children>
-            <HBox alignment="CENTER_LEFT">
+            <HBox fx:id="companyHBox" alignment="CENTER_LEFT" visible="false">
                <children>
                   <Label text="Company Name" />
                   <Region HBox.hgrow="ALWAYS" />
@@ -97,7 +96,7 @@
                   <Insets left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" visible="false">
+            <HBox fx:id="machineHBox" alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0">
                <children>
                   <Label text="Machine ID" />
                   <Region HBox.hgrow="ALWAYS" />
@@ -114,8 +113,8 @@
             <Insets left="30.0" right="30.0" />
          </padding>
          <children>
-            <Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
-            <Button fx:id="cancelButton" layoutX="50.0" layoutY="10.0" mnemonicParsing="false" text="Cancel" />
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Save" />
+            <Button fx:id="cancelButton" layoutX="50.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Cancel" />
          </children>
       </HBox>
    </children>
