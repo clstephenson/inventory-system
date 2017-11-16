@@ -41,12 +41,18 @@ public class Inventory {
     
     public boolean deletePart(int partID) {
         // todo: implement deletePart
-        throw new RuntimeException("not implemented");
+        return allParts.remove(lookupPart(partID));
+        
+        //throw new RuntimeException("not implemented");
     }
     
     public Part lookupPart(int partID) {
-        // todo: implement lookupPart
-        throw new RuntimeException("not implemented");
+        for(Part p : allParts) {
+            if(p.getPartID() == partID)
+                return p;
+        }
+        return null;
+        // todo: what if part not found?
     }
     
     public void updatePart(int partID) {
@@ -61,4 +67,5 @@ public class Inventory {
     public ObservableList<Product> getAllProducts() {
         return products;
     }
+    
 }

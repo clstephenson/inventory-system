@@ -11,6 +11,7 @@ import javafx.beans.property.StringProperty;
 
 public class Product {
     
+    private static int lastProductID = 0;   
     private List<Part> associatedParts = new ArrayList<>();
     private IntegerProperty productID = new SimpleIntegerProperty();
     private StringProperty name = new SimpleStringProperty();
@@ -21,23 +22,26 @@ public class Product {
     
     public Product() {
         associatedParts.clear();
-        setProductID(0);
+        setProductID(getNextProductID());
         setName("");
         setPrice(0.00);
         setInStock(0);
         setMin(0);
         setMax(0);
+        
+        lastProductID++;
     }
     
-    public Product(List<Part> associatedParts, int productID, String name, 
+    public Product(String name, 
             double price, int inStock, int min, int max) {
-        this.associatedParts = associatedParts;
-        setProductID(productID);
+        setProductID(getNextProductID());
         setName(name);
         setPrice(price);
         setInStock(inStock);
         setMin(min);
         setMax(max);
+        
+        lastProductID++;
     }
     
     public final int getProductID() {
@@ -100,5 +104,9 @@ public class Product {
     public Part lookupAssociatedPart(int partID) {
         //todo: implement lookupAssociatedPart
         throw new RuntimeException("not implemented");
+    }
+    
+    public static final int getNextProductID() {
+        return lastProductID + 1;
     }
 }

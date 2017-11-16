@@ -112,8 +112,11 @@ public class MainController implements Initializable{
     
     @FXML
     protected void deletePartButtonAction(ActionEvent event) {
-        throw new RuntimeException("not implemented");
-        //todo: implement deletePartButtonAction
+        //todo: check for deletePart returning false
+        int selectedPartID = partsTable.getSelectionModel().getSelectedItem().getPartID();
+        if (!Main.inventory.deletePart(selectedPartID)) {
+            Util.showErrorMessage("The selected part could not be deleted.");
+        }        
     }
     
     @FXML
@@ -136,12 +139,18 @@ public class MainController implements Initializable{
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        partIDTableColumn.setCellValueFactory(new PropertyValueFactory<Part, Integer>("partID"));
-        partNameTableColumn.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
-        partInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<Part, Integer>("inStock"));
-        partPriceTableColumn.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
+        partIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("partID"));
+        partNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        partInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<>("inStock"));
+        partPriceTableColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        
+        productIDTableColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("productID"));
+        productNameTableColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
+        productInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("inStock"));
+        productPriceTableColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
         
         partsTable.setItems(Main.inventory.getAllParts());
+        productsTable.setItems(Main.inventory.getAllProducts());
     }
     
 }
