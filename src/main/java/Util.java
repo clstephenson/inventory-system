@@ -17,6 +17,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import main.java.model.InhousePart;
+import main.java.model.OutsourcedPart;
 
 /**
  *
@@ -86,6 +88,13 @@ public class Util {
         return (Stage)srcNode.getScene().getWindow();
     }
     
-   
+    public static void createSampleData() {
+        Main.inventory.addPart(new InhousePart(87, "Widget #1", 134.50, 5, 3, 10));
+        Main.inventory.addPart(new InhousePart(87, "Widget #2", 57.25, 23, 15, 25));
+        Main.inventory.addPart(new OutsourcedPart("Widget Company", "Widget #3", 98.00, 8, 5, 10));
+        Main.inventory.addPart(new InhousePart(87, "Widget #4", 4.00, 45, 30, 50));
+        Main.inventory.addPart(new OutsourcedPart("Acme", "Widget #5", 1238.89, 12, 10, 15));
+        Main.inventory.addPart(new InhousePart(87, "Widget #6", 60.00, 10, 5, 10));
+    }
     
 }

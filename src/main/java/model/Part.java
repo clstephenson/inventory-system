@@ -18,7 +18,7 @@ public abstract class Part {
     private IntegerProperty max = new SimpleIntegerProperty();
 
     public Part() {
-        setPartID(0);
+        setPartID(getNextPartID());
         setName("");
         setPrice(0.00);
         setInStock(0);
@@ -27,8 +27,8 @@ public abstract class Part {
         lastPartID++;
     }
     
-    public Part(int partID, String name, double price, int inStock, int min, int max) {
-        setPartID(partID);
+    public Part(String name, double price, int inStock, int min, int max) {
+        setPartID(getNextPartID());
         setName(name);
         setPrice(price);
         setInStock(inStock);

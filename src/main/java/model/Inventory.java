@@ -2,11 +2,13 @@ package main.java.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Inventory {
     
-    private List<Product> products = new ArrayList<>();
-    private List<Part> allParts = new ArrayList<>();
+    private ObservableList<Product> products = FXCollections.observableArrayList();
+    private ObservableList<Part> allParts = FXCollections.observableArrayList();
     
     public Inventory() {
         products.clear();
@@ -50,5 +52,13 @@ public class Inventory {
     public void updatePart(int partID) {
         // todo: implement updatePart
         throw new RuntimeException("not implemented");
+    }
+    
+    public ObservableList<Part> getAllParts() {
+        return allParts;
+    }
+    
+    public ObservableList<Product> getAllProducts() {
+        return products;
     }
 }

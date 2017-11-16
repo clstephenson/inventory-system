@@ -68,7 +68,6 @@ public class AddPartController {
         if(inHouseRadioButton.isSelected()) {
             inhousePart = new InhousePart(
                     Integer.parseInt(machineIdTextField.getText()),
-                    Part.getNextPartID(),
                     partNameTextField.getText(),
                     Double.parseDouble(priceTextField.getText()),
                     Integer.parseInt(inventoryTextField.getText()),
@@ -79,7 +78,6 @@ public class AddPartController {
         } else {
             outsourcedPart = new OutsourcedPart(
                     companyTextField.getText(),
-                    Part.getNextPartID(),
                     partNameTextField.getText(),
                     Double.parseDouble(priceTextField.getText()),
                     Integer.parseInt(inventoryTextField.getText()),

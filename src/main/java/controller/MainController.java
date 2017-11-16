@@ -1,14 +1,22 @@
 package main.java.controller;
 
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import main.java.Main;
 import main.java.Util;
+import main.java.model.Part;
+import main.java.model.Product;
 
-public class MainController {
+public class MainController implements Initializable{
     
     @FXML
     private Button exitButton;
@@ -20,7 +28,19 @@ public class MainController {
     private Button partSearchButton;
 
     @FXML
-    private TableView<?> partsTable;
+    private TableView<Part> partsTable;
+    
+     @FXML
+    private TableColumn<Part, Integer> partIDTableColumn;
+
+    @FXML
+    private TableColumn<Part, String> partNameTableColumn;
+
+    @FXML
+    private TableColumn<Part, Integer> partInventoryTableColumn;
+
+    @FXML
+    private TableColumn<Part, Double> partPriceTableColumn;
 
     @FXML
     private Button addPartButton;
@@ -38,8 +58,20 @@ public class MainController {
     private Button productSearchButton;
 
     @FXML
-    private TableView<?> productsTable;
+    private TableView<Product> productsTable;
 
+    @FXML
+    private TableColumn<Product, Integer> productIDTableColumn;
+
+    @FXML
+    private TableColumn<Product, String> productNameTableColumn;
+
+    @FXML
+    private TableColumn<Product, Integer> productInventoryTableColumn;
+
+    @FXML
+    private TableColumn<Product, Double> productPriceTableColumn;
+    
     @FXML
     private Button addProductButton;
 
@@ -102,5 +134,14 @@ public class MainController {
         //todo: implement deleteProductButtonAction
     }
     
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        partIDTableColumn.setCellValueFactory(new PropertyValueFactory<Part, Integer>("partID"));
+        partNameTableColumn.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
+        partInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<Part, Integer>("inStock"));
+        partPriceTableColumn.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
+        
+        partsTable.setItems(Main.inventory.getAllParts());
+    }
     
 }

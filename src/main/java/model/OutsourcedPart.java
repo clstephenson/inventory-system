@@ -12,8 +12,8 @@ public class OutsourcedPart extends Part {
         this.setCompanyName("");
     }
 
-    public OutsourcedPart(String companyName, int partID, String name, double price, int inStock, int min, int max) {
-        super(partID, name, price, inStock, min, max);
+    public OutsourcedPart(String companyName, String name, double price, int inStock, int min, int max) {
+        super(name, price, inStock, min, max);
         this.companyName.set(companyName);
     }
         
