@@ -29,10 +29,9 @@ public class Inventory {
         throw new RuntimeException("not implemented");
     }
     
-    public void updateProduct(int productID) {
-        // todo: implement updateProduct
-        throw new RuntimeException("not implemented");
-    }
+//    public void updateProduct(int productID) {
+//        // method not used - see ModifyProductController for equivilent functionality
+//    }
     
     public void addPart(Part part) {
         // todo: implement addPart
@@ -55,10 +54,9 @@ public class Inventory {
         // todo: what if part not found?
     }
     
-    public void updatePart(int partID) {
-        // todo: implement updatePart
-        throw new RuntimeException("not implemented");
-    }
+//    public void updatePart(int partID) {
+//        // method not used - see ModifyPartController for equivilent functionality
+//    }
     
     public ObservableList<Part> getAllParts() {
         return allParts;

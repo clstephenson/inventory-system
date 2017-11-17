@@ -4,12 +4,16 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.java.Main;
 import main.java.Util;
@@ -100,14 +104,45 @@ public class MainController implements Initializable{
     
     @FXML
     protected void addPartButtonAction(ActionEvent event) {
-        //todo: implement addPartButtonAction
-        Stage window = Util.showModalWindow("AddPart.fxml", Util.getStageFromActionEvent(event), "Add Part");
+        Stage window = new Stage();
+        Parent root = null;
+        try {            
+            root = FXMLLoader.load(Util.class.getResource(Util.FXML_PATH + "AddPart.fxml"));
+        } catch (Exception ex) {
+            Util.showErrorMessage(ex.getMessage(), ex);
+        }                
+        window.setScene(new Scene(root));        
+        window.setTitle("Add Part");
+        window.setResizable(false);
+        window.initOwner(Util.getStageFromActionEvent(event));
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.showAndWait();
     }
     
     @FXML
     protected void modifyPartButtonAction(ActionEvent event) {
-        //todo: implement modifyPartButtonAction
-        Stage window = Util.showModalWindow("ModifyPart.fxml", Util.getStageFromActionEvent(event), "Modify Part");
+        Part selectedPart = partsTable.getSelectionModel().getSelectedItem();
+
+        Stage window = new Stage();
+        Parent root = null;
+        FXMLLoader loader = new FXMLLoader();
+        URL location;
+        try {
+            location = Util.class.getResource(Util.FXML_PATH + "ModifyPart.fxml");
+            loader.setLocation(location);
+            root = (Parent)loader.load(location.openStream());
+            ModifyPartController controller = (ModifyPartController)loader.getController();
+            controller.initData(selectedPart);
+            //root = FXMLLoader.load(Util.class.getResource(Util.FXML_PATH + fxmlFileName));
+        } catch (Exception ex) {
+            Util.showErrorMessage(ex.getMessage(), ex);
+        }                
+        window.setScene(new Scene(root));        
+        window.setTitle("Modify Part");
+        window.setResizable(false);
+        window.initOwner(Util.getStageFromActionEvent(event));
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.showAndWait();
     }
     
     @FXML
@@ -121,13 +156,24 @@ public class MainController implements Initializable{
     
     @FXML
     protected void addProductButtonAction(ActionEvent event) {
-        Stage window = Util.showModalWindow("AddProduct.fxml", Util.getStageFromActionEvent(event), "Add Product");
-        //todo: implement addProductButtonAction
+        Stage window = new Stage();
+        Parent root = null;
+        try {            
+            root = FXMLLoader.load(Util.class.getResource(Util.FXML_PATH + "AddProduct.fxml"));
+        } catch (Exception ex) {
+            Util.showErrorMessage(ex.getMessage(), ex);
+        }                
+        window.setScene(new Scene(root));        
+        window.setTitle("Add Product");
+        window.setResizable(false);
+        window.initOwner(Util.getStageFromActionEvent(event));
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.showAndWait();
     }
     
     @FXML
     protected void modifyProductButtonAction(ActionEvent event) {
-        Stage window = Util.showModalWindow("ModifyProduct.fxml", Util.getStageFromActionEvent(event), "Modify Product");
+//        Stage window = Util.showModalWindow("ModifyProduct.fxml", Util.getStageFromActionEvent(event), "Modify Product");
         //todo: implement modifyProductButtonAction
     }
     
@@ -136,7 +182,7 @@ public class MainController implements Initializable{
         throw new RuntimeException("not implemented");
         //todo: implement deleteProductButtonAction
     }
-    
+        
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         partIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("partID"));

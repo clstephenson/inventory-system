@@ -65,6 +65,30 @@ public class ModifyPartController {
     
     @FXML
     protected void handleSaveButtonAction(ActionEvent event) {
+        
+        
+//        if(inHouseRadioButton.isSelected()) {
+//            inhousePart = new InhousePart(
+//                    Integer.parseInt(machineIdTextField.getText()),
+//                    partNameTextField.getText(),
+//                    Double.parseDouble(priceTextField.getText()),
+//                    Integer.parseInt(inventoryTextField.getText()),
+//                    Integer.parseInt(minTextField.getText()),
+//                    Integer.parseInt(maxTextField.getText())                            
+//            );
+//            Main.inventory.addPart(inhousePart);
+//        } else {
+//            outsourcedPart = new OutsourcedPart(
+//                    companyTextField.getText(),
+//                    partNameTextField.getText(),
+//                    Double.parseDouble(priceTextField.getText()),
+//                    Integer.parseInt(inventoryTextField.getText()),
+//                    Integer.parseInt(minTextField.getText()),
+//                    Integer.parseInt(maxTextField.getText())
+//            );
+//            Main.inventory.addPart(outsourcedPart);
+//        }
+        
         Util.getStageFromActionEvent(event).close();
         //todo: finish handleSaveButtonAction
     }
@@ -86,5 +110,24 @@ public class ModifyPartController {
         companyHBox.setVisible(true);
     }
     
-    
+    protected void initData(Part part) {
+        partIdTextField.setText(Integer.toString(part.getPartID()));
+        partNameTextField.setText(part.getName());
+        inventoryTextField.setText(Integer.toString(part.getInStock()));
+        priceTextField.setText(Double.toString(part.getPrice()));
+        minTextField.setText(Integer.toString(part.getMin()));
+        maxTextField.setText(Integer.toString(part.getMax()));
+        
+        if(part instanceof InhousePart) {
+            machineIdTextField.setText(Integer.toString(((InhousePart) part).getMachineID()));
+            inHouseRadioButton.setSelected(true);
+            companyHBox.setVisible(false);
+            machineHBox.setVisible(true);
+        } else {
+            companyTextField.setText(((OutsourcedPart)part).getCompanyName());
+            outsourcedRadioButton.setSelected(true);
+            machineHBox.setVisible(false);
+            companyHBox.setVisible(true);
+        }
+    }
 }
