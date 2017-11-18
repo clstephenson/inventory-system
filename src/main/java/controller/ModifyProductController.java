@@ -1,5 +1,6 @@
 package main.java.controller;
 
+import java.text.NumberFormat;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,6 +8,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import main.java.Util;
+import main.java.model.Product;
 
 public class ModifyProductController {
 
@@ -104,6 +106,15 @@ public class ModifyProductController {
     void handleSearchButtonAction(ActionEvent event) {
         throw new RuntimeException("not implemented");
         //todo: implement handleSearchButtonAction
+    }
+    
+    protected void initData(Product product) {
+        productIdTextField.setText(Integer.toString(product.getProductID()));
+        productNameTextField.setText(product.getName());
+        inventoryTextField.setText(Integer.toString(product.getInStock()));
+        priceTextField.setText(NumberFormat.getCurrencyInstance().format(product.getPrice()));
+        minTextField.setText(Integer.toString(product.getMin()));
+        maxTextField.setText(Integer.toString(product.getMax()));
     }
 
 }

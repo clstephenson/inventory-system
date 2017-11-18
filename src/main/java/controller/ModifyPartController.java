@@ -1,5 +1,6 @@
 package main.java.controller;
 
+import java.text.NumberFormat;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -114,7 +115,7 @@ public class ModifyPartController {
         partIdTextField.setText(Integer.toString(part.getPartID()));
         partNameTextField.setText(part.getName());
         inventoryTextField.setText(Integer.toString(part.getInStock()));
-        priceTextField.setText(Double.toString(part.getPrice()));
+        priceTextField.setText(NumberFormat.getCurrencyInstance().format(part.getPrice()));
         minTextField.setText(Integer.toString(part.getMin()));
         maxTextField.setText(Integer.toString(part.getMax()));
         

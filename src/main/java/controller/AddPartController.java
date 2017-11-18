@@ -64,7 +64,7 @@ public class AddPartController {
     private OutsourcedPart outsourcedPart;
     
     @FXML
-    protected void handleSaveButtonAction(ActionEvent event) {
+    protected void handleSaveButtonAction(ActionEvent event) {        
         if(inHouseRadioButton.isSelected()) {
             inhousePart = new InhousePart(
                     Integer.parseInt(machineIdTextField.getText()),
@@ -107,5 +107,7 @@ public class AddPartController {
         companyHBox.setVisible(true);
     }
     
-    
+    public void initialize() {
+        partIdTextField.setText(Integer.toString(Part.getNextPartID()));
+    }
 }

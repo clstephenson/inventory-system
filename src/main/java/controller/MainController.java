@@ -1,14 +1,14 @@
 package main.java.controller;
 
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.text.NumberFormat;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -20,7 +20,7 @@ import main.java.Util;
 import main.java.model.Part;
 import main.java.model.Product;
 
-public class MainController implements Initializable{
+public class MainController {
     
     @FXML
     private Button exitButton;
@@ -133,7 +133,9 @@ public class MainController implements Initializable{
             root = (Parent)loader.load(location.openStream());
             ModifyPartController controller = (ModifyPartController)loader.getController();
             controller.initData(selectedPart);
-            //root = FXMLLoader.load(Util.class.getResource(Util.FXML_PATH + fxmlFileName));
+        } catch (NullPointerException ex) {
+            Util.showErrorMessage("Please select a part from the list first.");
+            return;
         } catch (Exception ex) {
             Util.showErrorMessage(ex.getMessage(), ex);
         }                
@@ -173,27 +175,83 @@ public class MainController implements Initializable{
     
     @FXML
     protected void modifyProductButtonAction(ActionEvent event) {
-//        Stage window = Util.showModalWindow("ModifyProduct.fxml", Util.getStageFromActionEvent(event), "Modify Product");
+        Product selectedProduct = productsTable.getSelectionModel().getSelectedItem();
+
+        Stage window = new Stage();
+        Parent root = null;
+        FXMLLoader loader = new FXMLLoader();
+        URL location;
+        try {
+            location = Util.class.getResource(Util.FXML_PATH + "ModifyProduct.fxml");
+            loader.setLocation(location);
+            root = (Parent)loader.load(location.openStream());
+            ModifyProductController controller = (ModifyProductController)loader.getController();
+            controller.initData(selectedProduct);
+        } catch (NullPointerException ex) {
+            Util.showErrorMessage("Please select a product from the list first.");
+            return;
+        } catch (Exception ex) {
+            Util.showErrorMessage(ex.getMessage(), ex);
+        }                
+        window.setScene(new Scene(root));        
+        window.setTitle("Modify Product");
+        window.setResizable(false);
+        window.initOwner(Util.getStageFromActionEvent(event));
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.showAndWait();
+        
         //todo: implement modifyProductButtonAction
     }
     
     @FXML
     protected void deleteProductButtonAction(ActionEvent event) {
-        throw new RuntimeException("not implemented");
+        int selectedProductID = productsTable.getSelectionModel().getSelectedItem().getProductID();
+        if (!Main.inventory.removeProduct(selectedProductID)) {
+            Util.showErrorMessage("The selected product could not be deleted.");
+        }  
         //todo: implement deleteProductButtonAction
     }
         
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize() {
         partIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("partID"));
         partNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         partInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<>("inStock"));
         partPriceTableColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+                        
+        productIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("productID"));
+        productNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        productInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<>("inStock"));
+        productPriceTableColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         
-        productIDTableColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("productID"));
-        productNameTableColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
-        productInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("inStock"));
-        productPriceTableColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
+        // format values in the part price column as a currency
+        partPriceTableColumn.setCellFactory(column -> {
+           return new TableCell<Part, Double>() {
+               @Override
+               protected void updateItem(Double item, boolean empty) {
+                   super.updateItem(item, empty);
+                   if(item == null || empty) {
+                       setText(null);
+                   } else {
+                       setText(NumberFormat.getCurrencyInstance().format(item));
+                   }
+               }
+           }; 
+        });
+        
+        // format values in the product price column as a currency
+        productPriceTableColumn.setCellFactory(column -> {
+           return new TableCell<Product, Double>() {
+               @Override
+               protected void updateItem(Double item, boolean empty) {
+                   super.updateItem(item, empty);
+                   if(item == null || empty) {
+                       setText(null);
+                   } else {
+                       setText(NumberFormat.getCurrencyInstance().format(item));
+                   }
+               }
+           }; 
+        });
         
         partsTable.setItems(Main.inventory.getAllParts());
         productsTable.setItems(Main.inventory.getAllProducts());

@@ -21,12 +21,16 @@ public class Inventory {
     
     public boolean removeProduct(int productID) {
         // todo: implement romoveProduct
-        throw new RuntimeException("not implemented");
+        return products.remove(lookupProduct(productID));
     }
     
     public Product lookupProduct(int productID) {
         // todo: implement lookupProduct
-        throw new RuntimeException("not implemented");
+        for(Product p : products) {
+            if(p.getProductID() == productID)
+                return p;
+        }
+        return null;
     }
     
 //    public void updateProduct(int productID) {
