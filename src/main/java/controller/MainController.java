@@ -2,6 +2,7 @@ package main.java.controller;
 
 import java.net.URL;
 import java.text.NumberFormat;
+import java.util.Random;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -199,7 +200,7 @@ public class MainController {
         window.initOwner(Util.getStageFromActionEvent(event));
         window.initModality(Modality.APPLICATION_MODAL);
         window.showAndWait();
-        
+        productsTable.refresh();
         //todo: implement modifyProductButtonAction
     }
     
@@ -222,28 +223,21 @@ public class MainController {
         productNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         productInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<>("inStock"));
         productPriceTableColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        
-        setCurrencyFormattingOnTableColumn(partPriceTableColumn);
-        setCurrencyFormattingOnTableColumn(productPriceTableColumn);
+               
+        Util.setCurrencyFormattingOnTableColumn(partPriceTableColumn);
+        Util.setCurrencyFormattingOnTableColumn(productPriceTableColumn);
                 
         partsTable.setItems(Main.inventory.getAllParts());
         productsTable.setItems(Main.inventory.getAllProducts());
+        
+        for(Product prod : Main.inventory.getAllProducts()) {
+            Random rand = new Random();
+            int randomID = rand.nextInt(partsTable.getItems().size() - 1);
+            Part part = partsTable.getItems().get(randomID);
+            prod.addAssociatedPart(part);
+        }
     }
     
-    private <T> void setCurrencyFormattingOnTableColumn(TableColumn col) {  
-        col.setCellFactory(column -> {            
-           return new TableCell<T, Double>() {
-               @Override
-               protected void updateItem(Double item, boolean empty) {
-                   super.updateItem(item, empty);
-                   if(item == null || empty) {
-                       setText(null);
-                   } else {
-                       setText(NumberFormat.getCurrencyInstance().format(item));
-                   }
-               }
-           }; 
-        });
-    }
+    
     
 }

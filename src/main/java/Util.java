@@ -7,10 +7,13 @@ package main.java;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.NumberFormat;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import main.java.model.InhousePart;
@@ -59,6 +62,22 @@ public class Util {
     public static Stage getStageFromActionEvent(ActionEvent event) {
         Node srcNode = (Node)event.getSource();
         return (Stage)srcNode.getScene().getWindow();
+    }
+    
+    public static <T> void setCurrencyFormattingOnTableColumn(TableColumn col) {  
+        col.setCellFactory(column -> {            
+           return new TableCell<T, Double>() {
+               @Override
+               protected void updateItem(Double item, boolean empty) {
+                   super.updateItem(item, empty);
+                   if(item == null || empty) {
+                       setText(null);
+                   } else {
+                       setText(NumberFormat.getCurrencyInstance().format(item));
+                   }
+               }
+           }; 
+        });
     }
     
     public static void createSampleData() {

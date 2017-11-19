@@ -56,7 +56,7 @@
                <children>
                   <Label text="Price/Cost" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <TextField fx:id="priceTextField" prefWidth="175.0" promptText="Price/Cost" />
+                  <TextField fx:id="priceTextField" onMouseClicked="#handlePriceMouseClick" prefWidth="175.0" promptText="Price/Cost" />
                </children>
                <padding>
                   <Insets left="30.0" right="30.0" />

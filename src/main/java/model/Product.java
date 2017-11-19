@@ -8,11 +8,13 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Product {
     
     private static int lastProductID = 0;   
-    private List<Part> associatedParts = new ArrayList<>();
+    private ObservableList<Part> associatedParts = FXCollections.observableArrayList();
     private IntegerProperty productID = new SimpleIntegerProperty();
     private StringProperty name = new SimpleStringProperty();
     private DoubleProperty price = new SimpleDoubleProperty();
@@ -98,12 +100,20 @@ public class Product {
     
     public boolean removeAssociatedPart(int partID) {
         //todo: implement removeAssociatedPart
-        throw new RuntimeException("not implemented");
+        for(Part p : associatedParts) {
+            if(p.getPartID() == partID)
+                return associatedParts.remove(p);
+        }
+        return false;
     }
     
     public Part lookupAssociatedPart(int partID) {
         //todo: implement lookupAssociatedPart
         throw new RuntimeException("not implemented");
+    }
+    
+    public ObservableList<Part> getAssociatedParts() {
+        return associatedParts;
     }
     
     public static final int getNextProductID() {
