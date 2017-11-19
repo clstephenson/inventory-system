@@ -223,38 +223,27 @@ public class MainController {
         productInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<>("inStock"));
         productPriceTableColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         
-        // format values in the part price column as a currency
-        partPriceTableColumn.setCellFactory(column -> {
-           return new TableCell<Part, Double>() {
-               @Override
-               protected void updateItem(Double item, boolean empty) {
-                   super.updateItem(item, empty);
-                   if(item == null || empty) {
-                       setText(null);
-                   } else {
-                       setText(NumberFormat.getCurrencyInstance().format(item));
-                   }
-               }
-           }; 
-        });
-        
-        // format values in the product price column as a currency
-        productPriceTableColumn.setCellFactory(column -> {
-           return new TableCell<Product, Double>() {
-               @Override
-               protected void updateItem(Double item, boolean empty) {
-                   super.updateItem(item, empty);
-                   if(item == null || empty) {
-                       setText(null);
-                   } else {
-                       setText(NumberFormat.getCurrencyInstance().format(item));
-                   }
-               }
-           }; 
-        });
-        
+        setCurrencyFormattingOnTableColumn(partPriceTableColumn);
+        setCurrencyFormattingOnTableColumn(productPriceTableColumn);
+                
         partsTable.setItems(Main.inventory.getAllParts());
         productsTable.setItems(Main.inventory.getAllProducts());
+    }
+    
+    private <T> void setCurrencyFormattingOnTableColumn(TableColumn col) {  
+        col.setCellFactory(column -> {            
+           return new TableCell<T, Double>() {
+               @Override
+               protected void updateItem(Double item, boolean empty) {
+                   super.updateItem(item, empty);
+                   if(item == null || empty) {
+                       setText(null);
+                   } else {
+                       setText(NumberFormat.getCurrencyInstance().format(item));
+                   }
+               }
+           }; 
+        });
     }
     
 }
