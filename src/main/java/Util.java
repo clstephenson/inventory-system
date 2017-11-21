@@ -106,10 +106,7 @@ public class Util {
                     node.setText(NumberFormat.getCurrencyInstance().format(Double.parseDouble(node.getText())));
                 } else {
                     Util.showErrorMessage("Please enter a numeric value for the price.");
-                    Platform.runLater(() -> {
-                        node.requestFocus();
-                    });
-                    
+                    node.requestFocus();                    
                 }
             }
         });

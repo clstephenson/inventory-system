@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -123,16 +124,36 @@ public class AddProductController {
 
     @FXML
     void handleSearchButtonAction(ActionEvent event) {
-        String searchString = partSearchTextField.getText().toLowerCase();
-        //only search if at least 3 characters are entered
-        if(searchString.length() >= 3) {
+        performPartsSearch();
+    }
+    
+    @FXML
+    void handleSearchFieldEnterKeyPressed(ActionEvent event) {
+        performPartsSearch();
+    }
+    
+    private void performPartsSearch() {
+        String searchString = partSearchTextField.getText().trim().toLowerCase();
+        
+        //show all results if search field is blank
+        if(searchString.equals("")) {
+            availablePartsTable.setItems(Main.inventory.getAllParts());
+        } else {
             partSearchResults = FXCollections.observableArrayList();
             Main.inventory.getAllParts().forEach(p -> {
                 if (p.getName().toLowerCase().contains(searchString))  
                     partSearchResults.add(p);
             });
             availablePartsTable.setItems(partSearchResults);
+            if(partSearchResults.isEmpty()) {
+                availablePartsTable.setPlaceholder(new Label("Search did not return any results."));
+            }
         }
+        
+        //give focus back to search field and populate with the trimmed lowercase string
+        partSearchTextField.setText(searchString);
+        partSearchTextField.requestFocus();
+        
         //todo: handle no search results condition
     }
     
@@ -155,6 +176,7 @@ public class AddProductController {
         
         availablePartsTable.setItems(Main.inventory.getAllParts());
         selectedPartsTable.setItems(currentProduct.getAssociatedParts());
+        
     }
 
 }

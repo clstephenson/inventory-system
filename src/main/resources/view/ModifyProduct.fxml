@@ -88,7 +88,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <TextField fx:id="partSearchTextField" promptText="Find a Part" />
+                  <TextField fx:id="partSearchTextField" onAction="#handleSearchFieldEnterKeyPressed" promptText="Find a Part" />
                   <Button fx:id="partSearchButton" mnemonicParsing="false" onAction="#handleSearchButtonAction" text="Search" />
                </children>
             </HBox>
