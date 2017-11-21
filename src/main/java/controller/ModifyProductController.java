@@ -2,8 +2,6 @@ package main.java.controller;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,7 +11,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import main.java.Main;
 import main.java.Util;
 import main.java.model.Part;
@@ -144,18 +141,7 @@ public class ModifyProductController {
     }
     
     public void initialize() {
-        priceTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue == true) {
-                NumberFormat cf = NumberFormat.getCurrencyInstance();
-                try {
-                    priceTextField.setText(Double.toString(cf.parse(priceTextField.getText()).doubleValue()));
-                } catch (ParseException ex) {
-                    Util.showErrorMessage(ex.getMessage(), ex);
-                }
-            } else {
-                priceTextField.setText(NumberFormat.getCurrencyInstance().format(Double.parseDouble(priceTextField.getText())));
-            }
-        });
+        Util.setFocusListenerForCurrencyFormat(priceTextField);
     }
     
     protected void initData(Product product) {

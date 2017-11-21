@@ -111,6 +111,10 @@ public class ModifyPartController {
         companyHBox.setVisible(true);
     }
     
+    public void initialize() {
+        Util.setFocusListenerForCurrencyFormat(priceTextField);
+    }
+    
     protected void initData(Part part) {
         partIdTextField.setText(Integer.toString(part.getPartID()));
         partNameTextField.setText(part.getName());

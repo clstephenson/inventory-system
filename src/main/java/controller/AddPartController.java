@@ -109,5 +109,6 @@ public class AddPartController {
     
     public void initialize() {
         partIdTextField.setText(Integer.toString(Part.getNextPartID()));
+        Util.setFocusListenerForCurrencyFormat(priceTextField);
     }
 }

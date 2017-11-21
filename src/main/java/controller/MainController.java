@@ -201,7 +201,6 @@ public class MainController {
         window.initModality(Modality.APPLICATION_MODAL);
         window.showAndWait();
         productsTable.refresh();
-        //todo: implement modifyProductButtonAction
     }
     
     @FXML
@@ -210,7 +209,6 @@ public class MainController {
         if (!Main.inventory.removeProduct(selectedProductID)) {
             Util.showErrorMessage("The selected product could not be deleted.");
         }  
-        //todo: implement deleteProductButtonAction
     }
         
     public void initialize() {
@@ -229,13 +227,6 @@ public class MainController {
                 
         partsTable.setItems(Main.inventory.getAllParts());
         productsTable.setItems(Main.inventory.getAllProducts());
-        
-        for(Product prod : Main.inventory.getAllProducts()) {
-            Random rand = new Random();
-            int randomID = rand.nextInt(partsTable.getItems().size() - 1);
-            Part part = partsTable.getItems().get(randomID);
-            prod.addAssociatedPart(part);
-        }
     }
     
     

@@ -20,7 +20,6 @@ public class Inventory {
     }
     
     public boolean removeProduct(int productID) {
-        // todo: implement romoveProduct
         return products.remove(lookupProduct(productID));
     }
     
