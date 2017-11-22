@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -85,7 +86,7 @@ public class MainController {
 
     @FXML
     private Button deleteProductButton;
-
+    
     @FXML
     protected void handleExitButtonAction(ActionEvent event) {
         Util.getStageFromActionEvent(event).close();
@@ -105,43 +106,39 @@ public class MainController {
     
     @FXML
     protected void addPartButtonAction(ActionEvent event) {
-        Stage window = new Stage();
-        Parent root = null;
-        try {            
-            root = FXMLLoader.load(Util.class.getResource(Util.FXML_PATH + "AddPart.fxml"));
-        } catch (Exception ex) {
-            Util.showErrorMessage(ex.getMessage(), ex);
-        }                
-        window.setScene(new Scene(root));        
-        window.setTitle("Add Part");
-        window.setResizable(false);
-        window.initOwner(Util.getStageFromActionEvent(event));
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.showAndWait();
+        openPartWindow(event, false);
     }
     
     @FXML
     protected void modifyPartButtonAction(ActionEvent event) {
-        Part selectedPart = partsTable.getSelectionModel().getSelectedItem();
-
+        openPartWindow(event, true);
+    }
+    
+    protected void openPartWindow(ActionEvent event, boolean modifyPart) {
+        String title = modifyPart ? "Modify Part" : "Add Part";
         Stage window = new Stage();
         Parent root = null;
         FXMLLoader loader = new FXMLLoader();
         URL location;
         try {
-            location = Util.class.getResource(Util.FXML_PATH + "ModifyPart.fxml");
+            location = Util.class.getResource(Util.FXML_PATH + "Part.fxml");
             loader.setLocation(location);
             root = (Parent)loader.load(location.openStream());
-            ModifyPartController controller = (ModifyPartController)loader.getController();
-            controller.initData(selectedPart);
+            if(modifyPart) {
+                PartController controller = (PartController)loader.getController();
+                Part selectedPart = partsTable.getSelectionModel().getSelectedItem();
+                controller.initData(selectedPart);
+            }
         } catch (NullPointerException ex) {
             Util.showErrorMessage("Please select a part from the list first.");
             return;
         } catch (Exception ex) {
             Util.showErrorMessage(ex.getMessage(), ex);
-        }                
-        window.setScene(new Scene(root));        
-        window.setTitle("Modify Part");
+        }  
+        Label label = (Label)loader.getNamespace().get("titleLabel");
+        label.setText(title);
+        window.setScene(new Scene(root)); 
+        window.setTitle(title);       
         window.setResizable(false);
         window.initOwner(Util.getStageFromActionEvent(event));
         window.initModality(Modality.APPLICATION_MODAL);

@@ -4,6 +4,7 @@ import java.text.NumberFormat;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -14,7 +15,7 @@ import main.java.model.InhousePart;
 import main.java.model.OutsourcedPart;
 import main.java.model.Part;
 
-public class ModifyPartController {
+public class PartController {
 
     @FXML
     private RadioButton inHouseRadioButton;
@@ -60,38 +61,44 @@ public class ModifyPartController {
     
     @FXML
     private HBox machineHBox;
+    
+    @FXML
+    private Label titleLabel;
 
     private InhousePart inhousePart;
     private OutsourcedPart outsourcedPart;
+    private boolean isModifyPartView = false;
     
     @FXML
-    protected void handleSaveButtonAction(ActionEvent event) {
-        
-        
-//        if(inHouseRadioButton.isSelected()) {
-//            inhousePart = new InhousePart(
-//                    Integer.parseInt(machineIdTextField.getText()),
-//                    partNameTextField.getText(),
-//                    Double.parseDouble(priceTextField.getText()),
-//                    Integer.parseInt(inventoryTextField.getText()),
-//                    Integer.parseInt(minTextField.getText()),
-//                    Integer.parseInt(maxTextField.getText())                            
-//            );
-//            Main.inventory.addPart(inhousePart);
-//        } else {
-//            outsourcedPart = new OutsourcedPart(
-//                    companyTextField.getText(),
-//                    partNameTextField.getText(),
-//                    Double.parseDouble(priceTextField.getText()),
-//                    Integer.parseInt(inventoryTextField.getText()),
-//                    Integer.parseInt(minTextField.getText()),
-//                    Integer.parseInt(maxTextField.getText())
-//            );
-//            Main.inventory.addPart(outsourcedPart);
-//        }
-        
+    protected void handleSaveButtonAction(ActionEvent event) {        
+        if(isModifyPartView) {
+            //this is an existing part to be modified
+            //todo: add save logic if existing part is modified
+        } else {
+            //this is a new part... create it and add to inventory
+            if(inHouseRadioButton.isSelected()) {
+                inhousePart = new InhousePart(
+                        Integer.parseInt(machineIdTextField.getText()),
+                        partNameTextField.getText(),
+                        Double.parseDouble(priceTextField.getText()),
+                        Integer.parseInt(inventoryTextField.getText()),
+                        Integer.parseInt(minTextField.getText()),
+                        Integer.parseInt(maxTextField.getText())                            
+                );
+                Main.inventory.addPart(inhousePart);
+            } else {
+                outsourcedPart = new OutsourcedPart(
+                        companyTextField.getText(),
+                        partNameTextField.getText(),
+                        Double.parseDouble(priceTextField.getText()),
+                        Integer.parseInt(inventoryTextField.getText()),
+                        Integer.parseInt(minTextField.getText()),
+                        Integer.parseInt(maxTextField.getText())
+                );
+                Main.inventory.addPart(outsourcedPart);
+            }
+        }
         Util.getStageFromActionEvent(event).close();
-        //todo: finish handleSaveButtonAction
     }
     
     @FXML
@@ -112,10 +119,14 @@ public class ModifyPartController {
     }
     
     public void initialize() {
+        if(!isModifyPartView) {
+            partIdTextField.setText(Integer.toString(Part.getNextPartID()));
+        }
         Util.setFocusListenerForCurrencyFormat(priceTextField);
     }
     
     protected void initData(Part part) {
+        isModifyPartView = true;
         partIdTextField.setText(Integer.toString(part.getPartID()));
         partNameTextField.setText(part.getName());
         inventoryTextField.setText(Integer.toString(part.getInStock()));
