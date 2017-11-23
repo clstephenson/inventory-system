@@ -17,11 +17,12 @@ import main.java.Util;
 import main.java.model.Part;
 import main.java.model.Product;
 
-public class ModifyProductController {
+public class ProductController {
 
     private Product currentProduct;
     private ObservableList<Part> unmodifiedPartsList;
     private ObservableList<Part> partSearchResults;
+    private boolean isModifyProductView = false;
     
     @FXML
     private TextField productIdTextField;
@@ -88,6 +89,9 @@ public class ModifyProductController {
 
     @FXML
     private Button cancelButton;
+    
+    @FXML
+    private Label titleLabel;
 
     @FXML
     void handleAddPartButtonAction(ActionEvent event) {  
@@ -96,13 +100,17 @@ public class ModifyProductController {
         } else {
             currentProduct.addAssociatedPart(availablePartsTable.getSelectionModel().getSelectedItem());  
         }
+        //todo: implement handleAddPartButtonAction
     }
 
     @FXML
     void handleCancelButtonAction(ActionEvent event) {
-        currentProduct.getAssociatedParts().clear();
-        for(Part p : unmodifiedPartsList) {
-            currentProduct.addAssociatedPart(p);
+        if(isModifyProductView) {
+            // revert changes to associated parts
+            currentProduct.getAssociatedParts().clear();
+            for(Part p : unmodifiedPartsList) {
+                currentProduct.addAssociatedPart(p);
+            }
         }
         Util.getStageFromActionEvent(event).close();
     }
@@ -114,25 +122,35 @@ public class ModifyProductController {
         } else {
             currentProduct.removeAssociatedPart(selectedPartsTable.getSelectionModel().getSelectedItem().getPartID());
         }
+        //todo: implement handleDeletePartButtonAction
     }
 
     @FXML
     void handleSaveButtonAction(ActionEvent event) {
-        currentProduct.setName(productNameTextField.getText());
-        NumberFormat cf = NumberFormat.getCurrencyInstance();
-        Number price = null;
-        try {
-            price = cf.parse(priceTextField.getText());
-        } catch (ParseException ex) {
-            Util.showErrorMessage(ex.getMessage(), ex);
+        if(isModifyProductView) {
+            currentProduct.setName(productNameTextField.getText());
+            NumberFormat cf = NumberFormat.getCurrencyInstance();
+            Number price = null;
+            try {
+                price = cf.parse(priceTextField.getText());
+            } catch (ParseException ex) {
+                Util.showErrorMessage(ex.getMessage(), ex);
+            }
+            currentProduct.setPrice(price.doubleValue());
+            currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
+            currentProduct.setMin(Integer.parseInt(minTextField.getText()));
+            currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
+        } else {
+            currentProduct.setName(productNameTextField.getText());
+            currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
+            currentProduct.setMin(Integer.parseInt(minTextField.getText()));
+            currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
+            currentProduct.setPrice(Double.parseDouble(priceTextField.getText()));
         }
-        currentProduct.setPrice(price.doubleValue());
-        currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
-        currentProduct.setMin(Integer.parseInt(minTextField.getText()));
-        currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
         
         Util.getStageFromActionEvent(event).close();
         
+        //todo: look at the price formatting here
         //todo: product table on main view not being updated with changes
     }
 
@@ -171,11 +189,23 @@ public class ModifyProductController {
         //todo: handle no search results condition
     }
     
-    public void initialize() {
-        Util.setFocusListenerForCurrencyFormat(priceTextField);
+    
+    public void initialize() {        
+        System.out.println("initialized called");
+        if(!isModifyProductView) {
+            currentProduct = new Product();
+            setupPartsTables();            
+        }
+        Util.setFocusListenerForCurrencyFormat(priceTextField);        
     }
     
+    /**
+     *initData is called from MainController to pass a product object to this controller.
+     * @param product The product object to be modified.
+     */
     protected void initData(Product product) {
+        System.out.println("initData called");
+        isModifyProductView = true;
         currentProduct = product;
         unmodifiedPartsList = FXCollections.observableArrayList();
         for(Part p : product.getAssociatedParts()) {
@@ -189,6 +219,15 @@ public class ModifyProductController {
         minTextField.setText(Integer.toString(product.getMin()));
         maxTextField.setText(Integer.toString(product.getMax()));
         
+        setupPartsTables();
+    }
+    
+    /**
+     * This method sets up the column to property bindings for the parts tables.  
+     * It needs to be called from initialize() or initData() depending on if a 
+     * product is being added or modified.
+     */
+    private void setupPartsTables() {
         availPartsPartIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("partID"));
         availPartsNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         availPartsInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<>("inStock"));
@@ -203,7 +242,7 @@ public class ModifyProductController {
         Util.setCurrencyFormattingOnTableColumn(usedPartsPriceTableColumn);
         
         availablePartsTable.setItems(Main.inventory.getAllParts());
-        selectedPartsTable.setItems(product.getAssociatedParts());
+        selectedPartsTable.setItems(currentProduct.getAssociatedParts());
     }
 
 }

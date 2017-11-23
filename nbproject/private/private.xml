@@ -3,14 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Z:/coding-projects/java/wgu/c482/InventorySystem-Stephenson/src/main/java/Main.java</file>
-            <file>file:/Z:/coding-projects/java/wgu/c482/InventorySystem-Stephenson/src/main/java/controller/ModifyPartController.java</file>
-            <file>file:/Z:/coding-projects/java/wgu/c482/InventorySystem-Stephenson/src/main/java/controller/ModifyProductController.java</file>
-            <file>file:/Z:/coding-projects/java/wgu/c482/InventorySystem-Stephenson/src/main/java/controller/AddProductController.java</file>
-            <file>file:/Z:/coding-projects/java/wgu/c482/InventorySystem-Stephenson/src/main/java/controller/AddPartController.java</file>
-            <file>file:/Z:/coding-projects/java/wgu/c482/InventorySystem-Stephenson/src/main/java/Util.java</file>
-            <file>file:/Z:/coding-projects/java/wgu/c482/InventorySystem-Stephenson/src/main/java/model/Inventory.java</file>
-            <file>file:/Z:/coding-projects/java/wgu/c482/InventorySystem-Stephenson/README.txt</file>
+            <file>file:/Z:/coding-projects/java/wgu/c482/InventorySystem-Stephenson/src/main/java/controller/ProductController.java</file>
+            <file>file:/Z:/coding-projects/java/wgu/c482/InventorySystem-Stephenson/src/main/java/controller/PartController.java</file>
             <file>file:/Z:/coding-projects/java/wgu/c482/InventorySystem-Stephenson/src/main/java/controller/MainController.java</file>
         </group>
     </open-files>
