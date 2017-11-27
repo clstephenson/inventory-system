@@ -100,7 +100,6 @@ public class ProductController {
         } else {
             currentProduct.addAssociatedPart(availablePartsTable.getSelectionModel().getSelectedItem());  
         }
-        //todo: implement handleAddPartButtonAction
     }
 
     @FXML
@@ -122,7 +121,6 @@ public class ProductController {
         } else {
             currentProduct.removeAssociatedPart(selectedPartsTable.getSelectionModel().getSelectedItem().getPartID());
         }
-        //todo: implement handleDeletePartButtonAction
     }
 
     @FXML
@@ -149,9 +147,6 @@ public class ProductController {
         }
         
         Util.getStageFromActionEvent(event).close();
-        
-        //todo: look at the price formatting here
-        //todo: product table on main view not being updated with changes
     }
 
     @FXML
@@ -185,8 +180,6 @@ public class ProductController {
         //give focus back to search field and populate with the trimmed lowercase string
         partSearchTextField.setText(searchString);
         partSearchTextField.requestFocus();
-        
-        //todo: handle no search results condition
     }
     
     
