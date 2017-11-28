@@ -1,7 +1,6 @@
 package main.java.controller;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +20,6 @@ public class ProductController {
 
     private Product currentProduct;
     private ObservableList<Part> unmodifiedPartsList;
-    private ObservableList<Part> partSearchResults;
     private boolean isModifyProductView = false;
     
     @FXML
@@ -154,22 +152,48 @@ public class ProductController {
         
         //show all results if search field is blank
         if(searchString.equals("")) {
-            availablePartsTable.setItems(Main.inventory.getAllParts());
+            reloadAvailablePartsTableData();
         } else {
-            partSearchResults = FXCollections.observableArrayList();
+            ObservableList<Part> searchResults = FXCollections.observableArrayList();
             Main.inventory.getAllParts().forEach(p -> {
                 if (p.getName().toLowerCase().contains(searchString))  
-                    partSearchResults.add(p);
+                    searchResults.add(p);
             });            
-            availablePartsTable.setItems(partSearchResults);
-            if(partSearchResults.isEmpty()) {
-                availablePartsTable.setPlaceholder(new Label("Search did not return any results."));
+            // if no results found, then show a message and reload the data
+            // otherwise, load the table with the search results
+            if(searchResults.isEmpty()) {
+                Util.showErrorMessage("Search did not return any results.");
+                reloadAvailablePartsTableData();
+            } else {
+                availablePartsTable.setItems(searchResults);
             }
         }
         
         //give focus back to search field and populate with the trimmed lowercase string
         partSearchTextField.setText(searchString);
         partSearchTextField.requestFocus();
+    }
+    
+    /**
+     * reset the available parts table to match inventory contents
+     */
+    private void reloadAvailablePartsTableData() {
+        availablePartsTable.setItems(Main.inventory.getAllParts());
+    }
+    
+    /**
+     * reset the selected parts table to match the current product associated parts
+     */
+    private void reloadSelectedPartsTableData() {
+        selectedPartsTable.setItems(currentProduct.getAssociatedParts());
+    }
+    
+    /**
+     * reset the contents of both parts tables
+     */
+    private void reloadBothPartsTables() {
+        reloadAvailablePartsTableData();
+        reloadSelectedPartsTableData();
     }
     
     
@@ -222,8 +246,7 @@ public class ProductController {
         Util.setCurrencyFormattingOnTableColumn(availPartsPriceTableColumn);
         Util.setCurrencyFormattingOnTableColumn(usedPartsPriceTableColumn);
         
-        availablePartsTable.setItems(Main.inventory.getAllParts());
-        selectedPartsTable.setItems(currentProduct.getAssociatedParts());
+        reloadBothPartsTables();
     }
 
 }

@@ -135,9 +135,9 @@ public class Util {
         
         //load sample product data into inventory
         Main.inventory.addProduct(new Product("Motor Assembly", 2500.00, 5, 2, 8));
-        Main.inventory.addProduct(new Product("Turbine", 10350.00, 5, 2, 8));
-        Main.inventory.addProduct(new Product("Fan Assembly", 500.00, 5, 2, 8));
-        Main.inventory.addProduct(new Product("Gearbox", 950.00, 5, 2, 8));
+        Main.inventory.addProduct(new Product("Turbine", 10350.00, 6, 2, 8));
+        Main.inventory.addProduct(new Product("Fan Assembly", 500.00, 7, 2, 8));
+        Main.inventory.addProduct(new Product("Gearbox", 950.00, 8, 2, 8));
         
         //load a random associated part into each product
         for(Product prod : Main.inventory.getAllProducts()) {

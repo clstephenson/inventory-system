@@ -1,6 +1,8 @@
 package main.java.controller;
 
 import java.net.URL;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -91,14 +93,56 @@ public class MainController {
     
     @FXML
     protected void partSearchButtonAction(ActionEvent event) {
-        throw new RuntimeException("not implemented");
-        //todo: implement partSearchButtonAction
+        String searchString = partSearchTextField.getText().trim().toLowerCase();
+        
+        //show all results if search field is blank
+        if(searchString.equals("")) {
+            reloadPartsTableData();
+        } else {
+            ObservableList<Part> searchResults = FXCollections.observableArrayList();
+            Main.inventory.getAllParts().forEach(p -> {
+                if (p.getName().toLowerCase().contains(searchString))  
+                    searchResults.add(p);
+            });            
+            // if no results found, then show a message and reload the data
+            // otherwise, load the table with the search results
+            if(searchResults.isEmpty()) {
+                Util.showErrorMessage("Search did not return any results.");
+                reloadPartsTableData();
+            } else {
+                partsTable.setItems(searchResults);
+            }
+        }        
+        //give focus back to search field and populate with the trimmed lowercase string
+        partSearchTextField.setText(searchString);
+        partSearchTextField.requestFocus();
     }
     
     @FXML
     protected void productSearchButtonAction(ActionEvent event) {
-        throw new RuntimeException("not implemented");
-        //todo: implement productSearchButtonAction
+        String searchString = productSearchTextField.getText().trim().toLowerCase();
+        
+        //show all results if search field is blank
+        if(searchString.equals("")) {
+            reloadProductsTableData();
+        } else {
+            ObservableList<Product> searchResults = FXCollections.observableArrayList();
+            Main.inventory.getAllProducts().forEach(p -> {
+                if (p.getName().toLowerCase().contains(searchString))  
+                    searchResults.add(p);
+            });            
+            // if no results found, then show a message and reload the data
+            // otherwise, load the table with the search results
+            if(searchResults.isEmpty()) {
+                Util.showErrorMessage("Search did not return any results.");
+                reloadProductsTableData();
+            } else {
+                productsTable.setItems(searchResults);
+            }
+        }        
+        //give focus back to search field and populate with the trimmed lowercase string
+        productSearchTextField.setText(searchString);
+        productSearchTextField.requestFocus();
     }
     
     @FXML
@@ -215,11 +259,30 @@ public class MainController {
                
         Util.setCurrencyFormattingOnTableColumn(partPriceTableColumn);
         Util.setCurrencyFormattingOnTableColumn(productPriceTableColumn);
-                
-        partsTable.setItems(Main.inventory.getAllParts());
+        
+        reloadPartsAndProductsTablesFromInventory();
+    }
+    
+    /**
+     * reset both the products and parts tables to match inventory contents
+     */
+    private void reloadPartsAndProductsTablesFromInventory() {
+        reloadPartsTableData();
+        reloadProductsTableData();
+    }
+    
+    /**
+     * reset the contents of the products table to match inventory contents
+     */
+    private void reloadProductsTableData() {
         productsTable.setItems(Main.inventory.getAllProducts());
     }
     
-    
+     /**
+     * reset the contents of the parts table to match inventory contents
+     */
+    private void reloadPartsTableData() {
+        partsTable.setItems(Main.inventory.getAllParts());
+    }
     
 }
