@@ -125,28 +125,18 @@ public class ProductController {
 
     @FXML
     void handleSaveButtonAction(ActionEvent event) {
-        if(isModifyProductView) {
-            currentProduct.setName(productNameTextField.getText());
-            NumberFormat cf = NumberFormat.getCurrencyInstance();
-            Number price = null;
-            try {
-                price = cf.parse(priceTextField.getText());
-            } catch (ParseException ex) {
-                Util.showErrorMessage(ex.getMessage(), ex);
-            }
-            currentProduct.setPrice(price.doubleValue());
-            currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
-            currentProduct.setMin(Integer.parseInt(minTextField.getText()));
-            currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
-        } else {
-            currentProduct.setName(productNameTextField.getText());
-            currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
-            currentProduct.setMin(Integer.parseInt(minTextField.getText()));
-            currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
-            currentProduct.setPrice(Double.parseDouble(priceTextField.getText()));
+        currentProduct.setName(productNameTextField.getText());
+        currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
+        currentProduct.setMin(Integer.parseInt(minTextField.getText()));
+        currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
+        currentProduct.setPrice(Util.getDoubleFromCurrencyInstance(priceTextField.getText()));
+        
+        // if a new product, then add to the inventory
+        if(!isModifyProductView) {
+            Main.inventory.addProduct(currentProduct);
         }
         
-        Util.getStageFromActionEvent(event).close();
+        Util.getStageFromActionEvent(event).close();        
     }
 
     @FXML
@@ -183,8 +173,7 @@ public class ProductController {
     }
     
     
-    public void initialize() {        
-        System.out.println("initialized called");
+    public void initialize() {      
         if(!isModifyProductView) {
             currentProduct = new Product();
             setupPartsTables();            
@@ -197,7 +186,6 @@ public class ProductController {
      * @param product The product object to be modified.
      */
     protected void initData(Product product) {
-        System.out.println("initData called");
         isModifyProductView = true;
         currentProduct = product;
         unmodifiedPartsList = FXCollections.observableArrayList();

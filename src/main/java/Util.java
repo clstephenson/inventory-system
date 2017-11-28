@@ -88,7 +88,6 @@ public class Util {
     public static void setFocusListenerForCurrencyFormat(TextField node) {
         //todo:  need to handle blank or non-numeric values
         node.focusedProperty().addListener((observable, oldValue, newValue) -> {
-
             // field has received focus
             if(newValue == true) {
                 NumberFormat cf = NumberFormat.getCurrencyInstance();                
@@ -98,8 +97,7 @@ public class Util {
                     } catch (ParseException ex) {
                         Util.showErrorMessage(ex.getMessage(), ex);
                     }
-                }
-                
+                }                
             // field has lost focus
             } else {
                 if(node.getText().matches("^[0-9]+\\.?[0-9]*$")) {
@@ -110,6 +108,17 @@ public class Util {
                 }
             }
         });
+    }
+    
+    public static double getDoubleFromCurrencyInstance(String currencyFormattedString) {
+        NumberFormat cf = NumberFormat.getCurrencyInstance();
+            Number price = null;
+            try {
+                price = cf.parse(currencyFormattedString);
+            } catch (ParseException ex) {
+                Util.showErrorMessage(ex.getMessage(), ex);
+            }
+            return price.doubleValue();
     }
     
     /**

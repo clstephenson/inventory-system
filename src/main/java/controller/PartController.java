@@ -17,6 +17,9 @@ import main.java.model.Part;
 
 public class PartController {
 
+    private boolean isModifyPartView = false;
+    private Part currentPart;
+    
     @FXML
     private RadioButton inHouseRadioButton;
 
@@ -64,41 +67,59 @@ public class PartController {
     
     @FXML
     private Label titleLabel;
-
-    private InhousePart inhousePart;
-    private OutsourcedPart outsourcedPart;
-    private boolean isModifyPartView = false;
     
     @FXML
     protected void handleSaveButtonAction(ActionEvent event) {        
         if(isModifyPartView) {
-            //this is an existing part to be modified
-            //todo: add save logic if existing part is modified
+            saveModifiedPart();
         } else {
-            //this is a new part... create it and add to inventory
-            if(inHouseRadioButton.isSelected()) {
-                inhousePart = new InhousePart(
-                        Integer.parseInt(machineIdTextField.getText()),
-                        partNameTextField.getText(),
-                        Double.parseDouble(priceTextField.getText()),
-                        Integer.parseInt(inventoryTextField.getText()),
-                        Integer.parseInt(minTextField.getText()),
-                        Integer.parseInt(maxTextField.getText())                            
-                );
-                Main.inventory.addPart(inhousePart);
-            } else {
-                outsourcedPart = new OutsourcedPart(
-                        companyTextField.getText(),
-                        partNameTextField.getText(),
-                        Double.parseDouble(priceTextField.getText()),
-                        Integer.parseInt(inventoryTextField.getText()),
-                        Integer.parseInt(minTextField.getText()),
-                        Integer.parseInt(maxTextField.getText())
-                );
-                Main.inventory.addPart(outsourcedPart);
-            }
+            saveNewPart();
         }
         Util.getStageFromActionEvent(event).close();
+    }
+    
+    private void saveModifiedPart() {
+        if(currentPart instanceof InhousePart) {
+            InhousePart currentInhousePart = (InhousePart)currentPart;
+            currentInhousePart.setMachineID(Integer.parseInt(machineIdTextField.getText()));
+            currentInhousePart.setName(partNameTextField.getText());
+            currentInhousePart.setInStock(Integer.parseInt(inventoryTextField.getText()));
+            currentInhousePart.setMin(Integer.parseInt(minTextField.getText()));
+            currentInhousePart.setMax(Integer.parseInt(maxTextField.getText()));
+            currentInhousePart.setPrice(Util.getDoubleFromCurrencyInstance(priceTextField.getText()));
+        } else {
+            OutsourcedPart currentOutsourcedPart = (OutsourcedPart)currentPart;
+            currentOutsourcedPart.setCompanyName(companyTextField.getText());
+            currentOutsourcedPart.setName(partNameTextField.getText());
+            currentOutsourcedPart.setInStock(Integer.parseInt(inventoryTextField.getText()));
+            currentOutsourcedPart.setMin(Integer.parseInt(minTextField.getText()));
+            currentOutsourcedPart.setMax(Integer.parseInt(maxTextField.getText()));
+            currentOutsourcedPart.setPrice(Util.getDoubleFromCurrencyInstance(priceTextField.getText()));
+        }
+    }
+    
+    private void saveNewPart() {
+        if(inHouseRadioButton.isSelected()) {
+            InhousePart newPart = new InhousePart(                
+                    Integer.parseInt(machineIdTextField.getText()),
+                    partNameTextField.getText(),
+                    Util.getDoubleFromCurrencyInstance(priceTextField.getText()),
+                    Integer.parseInt(inventoryTextField.getText()),
+                    Integer.parseInt(minTextField.getText()),
+                    Integer.parseInt(maxTextField.getText())                            
+            );
+            Main.inventory.addPart(newPart);
+        } else {
+            OutsourcedPart newPart = new OutsourcedPart(
+                    companyTextField.getText(),
+                    partNameTextField.getText(),
+                    Util.getDoubleFromCurrencyInstance(priceTextField.getText()),
+                    Integer.parseInt(inventoryTextField.getText()),
+                    Integer.parseInt(minTextField.getText()),
+                    Integer.parseInt(maxTextField.getText())
+            );
+            Main.inventory.addPart(newPart);
+        }
     }
     
     @FXML
@@ -127,6 +148,9 @@ public class PartController {
     
     protected void initData(Part part) {
         isModifyPartView = true;
+        currentPart = part;
+        
+        //set initial values in UI fields
         partIdTextField.setText(Integer.toString(part.getPartID()));
         partNameTextField.setText(part.getName());
         inventoryTextField.setText(Integer.toString(part.getInStock()));
@@ -134,6 +158,7 @@ public class PartController {
         minTextField.setText(Integer.toString(part.getMin()));
         maxTextField.setText(Integer.toString(part.getMax()));
         
+        //setup UI fields and radio buttons dependent on part type
         if(part instanceof InhousePart) {
             machineIdTextField.setText(Integer.toString(((InhousePart) part).getMachineID()));
             inHouseRadioButton.setSelected(true);
@@ -145,5 +170,10 @@ public class PartController {
             machineHBox.setVisible(false);
             companyHBox.setVisible(true);
         }
+        
+        //don't allow the part type to be changed for an existing part
+        inHouseRadioButton.setDisable(true);
+        outsourcedRadioButton.setDisable(true);
     }
+    
 }
