@@ -105,9 +105,7 @@ public class ProductController {
         if(isModifyProductView) {
             // revert changes to associated parts
             currentProduct.getAssociatedParts().clear();
-            for(Part p : unmodifiedPartsList) {
-                currentProduct.addAssociatedPart(p);
-            }
+            unmodifiedPartsList.forEach(p -> currentProduct.addAssociatedPart(p));
         }
         Util.getStageFromActionEvent(event).close();
     }
@@ -213,9 +211,7 @@ public class ProductController {
         isModifyProductView = true;
         currentProduct = product;
         unmodifiedPartsList = FXCollections.observableArrayList();
-        for(Part p : product.getAssociatedParts()) {
-            unmodifiedPartsList.add(p);
-        }
+        product.getAssociatedParts().forEach(p -> unmodifiedPartsList.add(p));
         
         productIdTextField.setText(Integer.toString(product.getProductID()));
         productNameTextField.setText(product.getName());

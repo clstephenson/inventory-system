@@ -140,12 +140,12 @@ public class Util {
         Main.inventory.addProduct(new Product("Gearbox", 950.00, 8, 2, 8));
         
         //load a random associated part into each product
-        for(Product prod : Main.inventory.getAllProducts()) {
+        Main.inventory.getAllProducts().forEach((prod) -> {
             Random rand = new Random();
             int randomID = rand.nextInt(Main.inventory.getAllParts().size() - 1);
             Part part = Main.inventory.getAllParts().get(randomID);
             prod.addAssociatedPart(part);
-        }
+        });
         
     }
     
