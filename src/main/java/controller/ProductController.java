@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -13,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import main.java.Main;
 import main.java.Util;
+import main.java.Validator;
 import main.java.model.Part;
 import main.java.model.Product;
 
@@ -102,6 +104,7 @@ public class ProductController {
 
     @FXML
     void handleCancelButtonAction(ActionEvent event) {
+        
         if(isModifyProductView) {
             // revert changes to associated parts
             currentProduct.getAssociatedParts().clear();
@@ -127,12 +130,16 @@ public class ProductController {
         currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
         currentProduct.setPrice(Util.getDoubleFromCurrencyInstance(priceTextField.getText()));
         
-        // if a new product, then add to the inventory
-        if(!isModifyProductView) {
-            Main.inventory.addProduct(currentProduct);
-        }
-        
-        Util.getStageFromActionEvent(event).close();        
+        String validationMessage = Validator.getValidator(currentProduct).validate();
+        if(validationMessage == null) {
+            // if a new product, then add to the inventory
+            if(!isModifyProductView) {
+                Main.inventory.addProduct(currentProduct);
+            }
+            Util.getStageFromActionEvent(event).close();
+        } else {
+            Util.showErrorMessage(validationMessage);
+        }                
     }
 
     @FXML

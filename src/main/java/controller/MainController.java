@@ -240,10 +240,15 @@ public class MainController {
     
     @FXML
     protected void deleteProductButtonAction(ActionEvent event) {
-        int selectedProductID = productsTable.getSelectionModel().getSelectedItem().getProductID();
-        if (!Main.inventory.removeProduct(selectedProductID)) {
-            Util.showErrorMessage("The selected product could not be deleted.");
-        }  
+        Product productToDelete = productsTable.getSelectionModel().getSelectedItem();
+        // is product has parts, do not allow deletion
+        if(productToDelete.hasAssociatedParts()) {
+            Util.showErrorMessage("Cannot delete product if it has associated parts.");
+        } else { // try to delete part - show error if fails
+            if(!Main.inventory.removeProduct(productToDelete.getProductID())) {
+                Util.showErrorMessage("The selected product could not be deleted.");
+            }  
+        }
     }
         
     public void initialize() {

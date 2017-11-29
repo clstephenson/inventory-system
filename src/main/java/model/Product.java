@@ -116,7 +116,12 @@ public class Product {
         return associatedParts;
     }
     
+    public boolean hasAssociatedParts() {
+        return !associatedParts.isEmpty();
+    }
+    
     public static final int getNextProductID() {
         return lastProductID + 1;
     }
+    
 }
