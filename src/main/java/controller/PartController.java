@@ -11,6 +11,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import main.java.Main;
 import main.java.Util;
+import main.java.Validator;
 import main.java.model.InhousePart;
 import main.java.model.OutsourcedPart;
 import main.java.model.Part;
@@ -69,13 +70,18 @@ public class PartController {
     private Label titleLabel;
     
     @FXML
-    protected void handleSaveButtonAction(ActionEvent event) {        
+    protected void handleSaveButtonAction(ActionEvent event) {          
         if(isModifyPartView) {
             saveModifiedPart();
         } else {
             saveNewPart();
         }
-        Util.getStageFromActionEvent(event).close();
+        String validationMessage = Validator.getValidator(currentPart).validate();
+        if(validationMessage == null) {
+            Util.getStageFromActionEvent(event).close();
+        } else {
+            Util.showErrorMessage(validationMessage);
+        }
     }
     
     private void saveModifiedPart() {
@@ -100,7 +106,7 @@ public class PartController {
     
     private void saveNewPart() {
         if(inHouseRadioButton.isSelected()) {
-            InhousePart newPart = new InhousePart(                
+            InhousePart currentPart = new InhousePart(                
                     Integer.parseInt(machineIdTextField.getText()),
                     partNameTextField.getText(),
                     Util.getDoubleFromCurrencyInstance(priceTextField.getText()),
@@ -108,9 +114,9 @@ public class PartController {
                     Integer.parseInt(minTextField.getText()),
                     Integer.parseInt(maxTextField.getText())                            
             );
-            Main.inventory.addPart(newPart);
+            Main.inventory.addPart(currentPart);
         } else {
-            OutsourcedPart newPart = new OutsourcedPart(
+            OutsourcedPart currentPart = new OutsourcedPart(
                     companyTextField.getText(),
                     partNameTextField.getText(),
                     Util.getDoubleFromCurrencyInstance(priceTextField.getText()),
@@ -118,7 +124,7 @@ public class PartController {
                     Integer.parseInt(minTextField.getText()),
                     Integer.parseInt(maxTextField.getText())
             );
-            Main.inventory.addPart(newPart);
+            Main.inventory.addPart(currentPart);
         }
     }
     
