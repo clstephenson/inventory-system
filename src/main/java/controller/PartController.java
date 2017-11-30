@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import main.java.Main;
+import main.java.PartValidator;
 import main.java.Util;
 import main.java.Validator;
 import main.java.model.InhousePart;
@@ -70,17 +71,25 @@ public class PartController {
     private Label titleLabel;
     
     @FXML
-    protected void handleSaveButtonAction(ActionEvent event) {          
-        if(isModifyPartView) {
-            saveModifiedPart();
-        } else {
-            saveNewPart();
-        }
-        String validationMessage = Validator.getValidator(currentPart).validate();
-        if(validationMessage == null) {
+    protected void handleSaveButtonAction(ActionEvent event) {  
+        Validator validator = (PartValidator)Validator.getValidator(
+                Validator.ValidatorTypes.PART, 
+                partNameTextField.getText(), 
+                minTextField.getText(), 
+                maxTextField.getText(), 
+                inventoryTextField.getText(), 
+                priceTextField.getText(), 
+                null);
+        if(validator.validate()) {
+            if(isModifyPartView) {
+                saveModifiedPart();
+            } else {
+                saveNewPart();
+            }
+        
             Util.getStageFromActionEvent(event).close();
         } else {
-            Util.showErrorMessage(validationMessage);
+            Util.showErrorMessage(validator.getMessageAsString());
         }
     }
     
@@ -130,7 +139,9 @@ public class PartController {
     
     @FXML
     protected void handleCancelButtonAction(ActionEvent event) {
-        Util.getStageFromActionEvent(event).close();
+        if(Util.askForUserConfirmation("Are you sure you'd like to cancel?")) {
+            Util.getStageFromActionEvent(event).close();
+        }
     }
     
     @FXML

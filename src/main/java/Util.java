@@ -9,11 +9,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Random;
-import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -58,6 +61,19 @@ public class Util {
                 new ScrollPane(new TextArea(sw.toString())));
         alert.showAndWait();
     }
+    
+    /**
+     * Display a confirmation dialog to the user
+     * @param message Message to be displayed
+     * @return true if OK button was pressed, otherwise false
+     */
+    public static boolean askForUserConfirmation(String message) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Please Confirm...");
+        confirmation.setContentText(message);
+        Optional<ButtonType> result = confirmation.showAndWait();
+        return result.get() == ButtonType.OK;
+    }
         
     /**
      * Get the stage object from where an actionEvent originates.
@@ -69,6 +85,11 @@ public class Util {
         return (Stage)srcNode.getScene().getWindow();
     }
     
+    /**
+     * Set up automatic currency formatting on all values in a specified table column. 
+     * @param <T> Type of the class contained in the TableView.items list
+     * @param col TableColumn object to format
+     */
     public static <T> void setCurrencyFormattingOnTableColumn(TableColumn col) {  
         col.setCellFactory(column -> {            
            return new TableCell<T, Double>() {
@@ -85,14 +106,21 @@ public class Util {
         });
     }
     
+    /**
+     * Set up a listener on a text field to automatically add currency formatting when the field 
+     * loses focus, and removes currency formatting when the field has focus.
+     * @param node TextField to watch for focus
+     */
     public static void setFocusListenerForCurrencyFormat(TextField node) {
         //todo:  need to handle blank or non-numeric values
         node.focusedProperty().addListener((observable, oldValue, newValue) -> {
             // field has received focus
             if(newValue == true) {
-                NumberFormat cf = NumberFormat.getCurrencyInstance();                
+                NumberFormat cf = NumberFormat.getCurrencyInstance(); 
+                // check if the text matches a currency format
                 if(node.getText().matches("^\\$[0-9,]*\\.[0-9]*$")) {
                     try {
+                        // remove the currency formatting
                         node.setText(Double.toString(cf.parse(node.getText()).doubleValue()));
                     } catch (ParseException ex) {
                         Util.showErrorMessage(ex.getMessage(), ex);
@@ -100,7 +128,9 @@ public class Util {
                 }                
             // field has lost focus
             } else {
+                // check for string representation of a double
                 if(node.getText().matches("^[0-9]+\\.?[0-9]*$")) {
+                    // add currency formatting to the string
                     node.setText(NumberFormat.getCurrencyInstance().format(Double.parseDouble(node.getText())));
                 } else {
                     Util.showErrorMessage("Please enter a numeric value for the price.");
@@ -110,6 +140,11 @@ public class Util {
         });
     }
     
+    /**
+     * Get the numeric double value from a currency formatted string.  Example:  returns 5.0 for "$5.00".
+     * @param currencyFormattedString string formatted as currency (ex. "$5.00")
+     * @return double numeric value represented by the string
+     */
     public static double getDoubleFromCurrencyInstance(String currencyFormattedString) {
         NumberFormat cf = NumberFormat.getCurrencyInstance();
             Number price = null;
@@ -119,6 +154,12 @@ public class Util {
                 Util.showErrorMessage(ex.getMessage(), ex);
             }
             return price.doubleValue();
+    }
+    
+    public static ArrayList getArrayListCopyOfObservableList(ObservableList list) {
+        ArrayList copy = new ArrayList();
+        list.forEach(item -> copy.add(item));
+        return copy;
     }
     
     /**

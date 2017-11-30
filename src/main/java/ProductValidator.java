@@ -1,7 +1,7 @@
 package main.java;
 
+import java.util.ArrayList;
 import main.java.model.Part;
-import main.java.model.Product;
 
 /**
  *
@@ -9,36 +9,53 @@ import main.java.model.Product;
  */
 public class ProductValidator extends Validator {
     
-    private Product product;
+    private String name;
+    private String min;
+    private String max;
+    private String inventory;
+    private String price;
+    private ArrayList<Part> productParts;
     
-    public ProductValidator(Product product) {
+    public ProductValidator(String name, String min, String max, String inventory, 
+            String price, ArrayList<Part> productParts) {
         super();
-        this.product = product;
+        this.name = name;
+        this.min = min;
+        this.max = max;
+        this.inventory = inventory;
+        this.price = price;        
     }
     
-    public String validate() {
-        super.validateInventoryLevelBetweenMinAndMaxInclusive(product.getInStock(), product.getMin(), product.getMax());
-        super.validateMaxNotLessThanMin(product.getMin(), product.getMax());
-        super.validateMinNotGreaterThanMax(product.getMin(), product.getMax());
-        validateProductHasAtLeastOnePart();
-        validatePriceCannotBeLessThanCostOfParts();
-        
-        String message = super.getMessageAsString();
-        return message.length() == 0 ? null : message;
+    @Override
+    public boolean validate() {
+        if(areValuesPresentAndCorrectTypes()) {
+            // only run these tests if we have valid values for each required field
+            super.validateInventoryLevelBetweenMinAndMaxInclusive(inventory, min, max);
+            super.validateMaxNotLessThanMin(min, max);
+            super.validateMinNotGreaterThanMax(min, max);
+            validateProductHasAtLeastOnePart();
+            validatePriceCannotBeLessThanCostOfParts();
+        }        
+        return super.hasValidationErrors();
+    }
+    
+    @Override
+    protected boolean areValuesPresentAndCorrectTypes() {
+        return super.validateIsNumeric(min, max, inventory, price);
     }
     
     private void validateProductHasAtLeastOnePart() {        
-        if(!product.hasAssociatedParts()) {
+        if(productParts.isEmpty()) {
             super.addToMessage("A product must have at least one associated part.");
         }
     }
     
     private void validatePriceCannotBeLessThanCostOfParts() {
         double costOfParts = 0.00;
-        for(Part p : product.getAssociatedParts()) {
+        for(Part p : productParts) {
             costOfParts += p.getPrice();
         }        
-        if(product.getPrice() < costOfParts) {
+        if(Double.parseDouble(price) < costOfParts) {
             super.addToMessage("Product price cannot be less than its combined cost of parts.");
         }
     }

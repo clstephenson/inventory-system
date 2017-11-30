@@ -157,11 +157,12 @@ public class MainController {
        
     @FXML
     protected void deletePartButtonAction(ActionEvent event) {
-        //todo: check for deletePart returning false
-        int selectedPartID = partsTable.getSelectionModel().getSelectedItem().getPartID();
-        if (!Main.inventory.deletePart(selectedPartID)) {
-            Util.showErrorMessage("The selected part could not be deleted.");
-        }        
+        if(Util.askForUserConfirmation("Are you sure you'd like to delete the selected part?")) {
+            int selectedPartID = partsTable.getSelectionModel().getSelectedItem().getPartID();
+            if (!Main.inventory.deletePart(selectedPartID)) {
+                Util.showErrorMessage("The selected part could not be deleted.");
+            }   
+        }
     }
     
     @FXML
@@ -240,14 +241,16 @@ public class MainController {
     
     @FXML
     protected void deleteProductButtonAction(ActionEvent event) {
-        Product productToDelete = productsTable.getSelectionModel().getSelectedItem();
-        // is product has parts, do not allow deletion
-        if(productToDelete.hasAssociatedParts()) {
-            Util.showErrorMessage("Cannot delete product if it has associated parts.");
-        } else { // try to delete part - show error if fails
-            if(!Main.inventory.removeProduct(productToDelete.getProductID())) {
-                Util.showErrorMessage("The selected product could not be deleted.");
-            }  
+        if(Util.askForUserConfirmation("Are you sure you'd like to delete the selected product?")) {
+            Product productToDelete = productsTable.getSelectionModel().getSelectedItem();
+            // is product has parts, do not allow deletion
+            if(productToDelete.hasAssociatedParts()) {
+                Util.showErrorMessage("Cannot delete product if it has associated parts.");
+            } else { // try to delete part - show error if fails
+                if(!Main.inventory.removeProduct(productToDelete.getProductID())) {
+                    Util.showErrorMessage("The selected product could not be deleted.");
+                }  
+            }
         }
     }
         

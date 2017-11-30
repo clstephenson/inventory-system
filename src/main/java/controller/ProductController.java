@@ -1,6 +1,7 @@
 package main.java.controller;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,6 +14,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import main.java.Main;
+import main.java.PartValidator;
+import main.java.ProductValidator;
 import main.java.Util;
 import main.java.Validator;
 import main.java.model.Part;
@@ -104,41 +107,51 @@ public class ProductController {
 
     @FXML
     void handleCancelButtonAction(ActionEvent event) {
-        
-        if(isModifyProductView) {
-            // revert changes to associated parts
-            currentProduct.getAssociatedParts().clear();
-            unmodifiedPartsList.forEach(p -> currentProduct.addAssociatedPart(p));
+        if(Util.askForUserConfirmation("Are you sure you'd like to cancel?")) {
+            if(isModifyProductView) {
+                // revert changes to associated parts
+                currentProduct.getAssociatedParts().clear();
+                unmodifiedPartsList.forEach(p -> currentProduct.addAssociatedPart(p));
+            }
+            Util.getStageFromActionEvent(event).close();
         }
-        Util.getStageFromActionEvent(event).close();
     }
 
     @FXML
     void handleDeletePartButtonAction(ActionEvent event) {
-        if(selectedPartsTable.getSelectionModel().getSelectedItem() == null) {
-            Util.showErrorMessage("Please select a part to remove.");
-        } else {
-            currentProduct.removeAssociatedPart(selectedPartsTable.getSelectionModel().getSelectedItem().getPartID());
+        if(Util.askForUserConfirmation("Are you sure you'd like to remove the selected part?")) {
+            if(selectedPartsTable.getSelectionModel().getSelectedItem() == null) {
+                Util.showErrorMessage("Please select a part to remove.");
+            } else {
+                currentProduct.removeAssociatedPart(selectedPartsTable.getSelectionModel().getSelectedItem().getPartID());
+            }
         }
     }
 
     @FXML
     void handleSaveButtonAction(ActionEvent event) {
-        currentProduct.setName(productNameTextField.getText());
-        currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
-        currentProduct.setMin(Integer.parseInt(minTextField.getText()));
-        currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
-        currentProduct.setPrice(Util.getDoubleFromCurrencyInstance(priceTextField.getText()));
-        
-        String validationMessage = Validator.getValidator(currentProduct).validate();
-        if(validationMessage == null) {
+        Validator validator = (ProductValidator)Validator.getValidator(
+                Validator.ValidatorTypes.PRODUCT, 
+                productNameTextField.getText(), 
+                minTextField.getText(), 
+                maxTextField.getText(), 
+                inventoryTextField.getText(), 
+                priceTextField.getText(), 
+                Util.getArrayListCopyOfObservableList(currentProduct.getAssociatedParts()));
+        if(validator.validate()) {        
+            currentProduct.setName(productNameTextField.getText());
+            currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
+            currentProduct.setMin(Integer.parseInt(minTextField.getText()));
+            currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
+            currentProduct.setPrice(Util.getDoubleFromCurrencyInstance(priceTextField.getText()));
+                
             // if a new product, then add to the inventory
             if(!isModifyProductView) {
                 Main.inventory.addProduct(currentProduct);
             }
             Util.getStageFromActionEvent(event).close();
         } else {
-            Util.showErrorMessage(validationMessage);
+            Util.showErrorMessage(validator.getMessageAsString());
         }                
     }
 
