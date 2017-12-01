@@ -137,6 +137,7 @@ public class ProductController {
                 maxTextField.getText(), 
                 inventoryTextField.getText(), 
                 priceTextField.getText(), 
+                null,
                 Util.getArrayListCopyOfObservableList(currentProduct.getAssociatedParts()));
         if(validator.validate()) {        
             currentProduct.setName(productNameTextField.getText());

@@ -10,12 +10,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controller.MainController">
    <top>
       <HBox BorderPane.alignment="CENTER">
          <children>
-            <Label text="Inventory Management System" HBox.hgrow="NEVER" />
+            <Label text="Inventory Management System" HBox.hgrow="NEVER">
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -39,7 +43,10 @@
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
-                        <Label text="Parts" HBox.hgrow="NEVER" />
+                        <Label text="Parts" HBox.hgrow="NEVER">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
                         <Region HBox.hgrow="ALWAYS" />
                         <TextField fx:id="partSearchTextField" />
                         <Button fx:id="partSearchButton" mnemonicParsing="false" onAction="#partSearchButtonAction" text="Search" HBox.hgrow="NEVER" />
@@ -78,7 +85,10 @@
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
-                        <Label text="Products" HBox.hgrow="NEVER" />
+                        <Label text="Products" HBox.hgrow="NEVER">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
                         <Region HBox.hgrow="ALWAYS" />
                         <TextField fx:id="productSearchTextField" />
                         <Button fx:id="productSearchButton" mnemonicParsing="false" onAction="#productSearchButtonAction" text="Search" HBox.hgrow="NEVER" />

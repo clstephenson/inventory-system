@@ -6,22 +6,24 @@ package main.java;
  */
 public class PartValidator extends Validator {
     
-    private String name;
-    private String min;
-    private String max;
-    private String inventory;
-    private String price;
+    private final String name;
+    private final String min;
+    private final String max;
+    private final String inventory;
+    private final String price;
+    private final String machineID;
     
-    public PartValidator(String name, String min, String max, String inventory, String price) {
+    public PartValidator(String name, String min, String max, String inventory, String price, String machineID) {
         super();
         this.name = name;
         this.min = min;
         this.max = max;
         this.inventory = inventory;
-        this.price = price.contains("$") ? price.substring(1) : price;   
-        //TODO:  need to remove $ from price text to match numeric regex in validateIsNumeric!
+        this.machineID = machineID;
+        this.price = price.replace(",", "").replace("$", ""); //remove , and $ from price text
     }
     
+    @Override
     public boolean validate() {
         if(areValuesPresentAndCorrectTypes()) {
             // only run these tests if we have valid values for each required field
@@ -29,10 +31,16 @@ public class PartValidator extends Validator {
             super.validateMaxNotLessThanMin(min, max);
             super.validateMinNotGreaterThanMax(min, max);
         }        
-        return super.hasValidationErrors();
+        return super.isValid();
     }
     
+    @Override
     protected boolean areValuesPresentAndCorrectTypes() {
-        return super.validateIsNumeric(min, max, inventory, price);
+        boolean ok = false;
+        if(super.validateIsNotEmpty(name, price, inventory) &&
+                super.validateIsNumeric(min, max, inventory, price, machineID)) {
+            ok = true;
+        }
+        return ok;
     }
 }

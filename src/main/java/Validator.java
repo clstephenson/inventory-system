@@ -7,7 +7,6 @@ package main.java;
 
 import java.util.ArrayList;
 import java.util.StringJoiner;
-import main.java.model.Part;
 
 /**
  *
@@ -21,9 +20,9 @@ public abstract class Validator {
     public enum ValidatorTypes {PART, PRODUCT}
     
     public static Validator getValidator(ValidatorTypes type, String name, String min, 
-            String max, String inventory, String price, ArrayList productParts) {
+            String max, String inventory, String price, String machineID, ArrayList productParts) {
         if(type == ValidatorTypes.PART) {
-            return new PartValidator(name, min, max, inventory, price);
+            return new PartValidator(name, min, max, inventory, price, machineID);
         }
         else if(type == ValidatorTypes.PRODUCT) {
             return new ProductValidator(name, min, max, inventory, price, productParts);
@@ -61,11 +60,22 @@ public abstract class Validator {
     protected boolean validateIsNumeric(String ... fields) {
         boolean ok = true;
         for(String field : fields) {
-            if(!field.matches("^[0-9]+\\.?[0-9]*$")) {
+            if(!field.isEmpty() && !field.matches("^[0-9]+\\.?[0-9]*$")) {
                 ok = false;
             }
         }
-        if(!ok) message.add("Min, Max, Inventory Stock, and Price must be numeric.");
+        if(!ok) message.add("Min, Max, Inventory Stock, Price and Machine ID must be numeric.");
+        return ok;
+    }
+    
+    protected boolean validateIsNotEmpty(String ... fields) {
+        boolean ok = true;
+        for(String field : fields) {
+            if(field == null || field.isEmpty()) {
+                ok = false;
+            }
+        }
+        if(!ok) message.add("Product/Part must have a name, price, and inventory level.");
         return ok;
     }
         
@@ -81,8 +91,8 @@ public abstract class Validator {
         return message.toString();
     }
     
-    protected boolean hasValidationErrors() {
-        return message.length() > 0;
+    protected boolean isValid() {
+        return message.length() == 0;
     }
         
 }

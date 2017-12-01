@@ -9,12 +9,12 @@ import main.java.model.Part;
  */
 public class ProductValidator extends Validator {
     
-    private String name;
-    private String min;
-    private String max;
-    private String inventory;
-    private String price;
-    private ArrayList<Part> productParts;
+    private final String name;
+    private final String min;
+    private final String max;
+    private final String inventory;
+    private final String price;
+    private final ArrayList<Part> productParts;
     
     public ProductValidator(String name, String min, String max, String inventory, 
             String price, ArrayList<Part> productParts) {
@@ -23,7 +23,8 @@ public class ProductValidator extends Validator {
         this.min = min;
         this.max = max;
         this.inventory = inventory;
-        this.price = price;        
+        this.price = price.replace(",", "").replace("$", ""); //remove , and $ from price text  
+        this.productParts = productParts;
     }
     
     @Override
@@ -36,12 +37,17 @@ public class ProductValidator extends Validator {
             validateProductHasAtLeastOnePart();
             validatePriceCannotBeLessThanCostOfParts();
         }        
-        return super.hasValidationErrors();
+        return super.isValid();
     }
     
     @Override
     protected boolean areValuesPresentAndCorrectTypes() {
-        return super.validateIsNumeric(min, max, inventory, price);
+        boolean ok = false;
+        if(super.validateIsNotEmpty(name, price, inventory) &&
+                super.validateIsNumeric(min, max, inventory, price)) {
+            ok = true;
+        }
+        return ok;
     }
     
     private void validateProductHasAtLeastOnePart() {        

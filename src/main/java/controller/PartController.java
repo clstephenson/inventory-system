@@ -71,14 +71,16 @@ public class PartController {
     private Label titleLabel;
     
     @FXML
-    protected void handleSaveButtonAction(ActionEvent event) {  
+    protected void handleSaveButtonAction(ActionEvent event) { 
+        //todo:  changed validation messages to be part/product specific - add machine id.
         Validator validator = (PartValidator)Validator.getValidator(
                 Validator.ValidatorTypes.PART, 
                 partNameTextField.getText(), 
                 minTextField.getText(), 
                 maxTextField.getText(), 
                 inventoryTextField.getText(), 
-                priceTextField.getText(), 
+                priceTextField.getText(),
+                inHouseRadioButton.isSelected() ? machineIdTextField.getText() : null,
                 null);
         if(validator.validate()) {
             if(isModifyPartView) {

@@ -10,12 +10,16 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <VBox prefHeight="342.0" prefWidth="350.0" spacing="15.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controller.PartController">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="30.0">
          <children>
-            <Label fx:id="titleLabel" text="Add Part" />
+            <Label fx:id="titleLabel" prefHeight="25.0" prefWidth="74.0" text="Add Part">
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
             <RadioButton fx:id="inHouseRadioButton" mnemonicParsing="false" onAction="#handleInhouseRadioButtonAction" selected="true" text="In-House">
                <toggleGroup>
                   <ToggleGroup fx:id="partTypeToggleGroup" />
