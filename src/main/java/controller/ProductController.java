@@ -168,9 +168,9 @@ public class ProductController {
     
     private void performPartsSearch() {
         String searchString = partSearchTextField.getText().trim().toLowerCase();
-        
-        //show all results if search field is blank
+                
         if(searchString.equals("")) {
+            //show all results if search field is blank
             reloadAvailablePartsTableData();
         } else {
             ObservableList<Part> searchResults = FXCollections.observableArrayList();
@@ -221,7 +221,8 @@ public class ProductController {
             currentProduct = new Product();
             setupPartsTables();            
         }
-        Util.setFocusListenerForCurrencyFormat(priceTextField);        
+        Util.setFocusListenerForCurrencyFormat(priceTextField);  
+        Util.setFocusListenerForEmptyNumericFields(minTextField, maxTextField, inventoryTextField);
     }
     
     /**

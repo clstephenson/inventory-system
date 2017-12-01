@@ -10,7 +10,7 @@ import java.util.StringJoiner;
 
 /**
  *
- * @author Chris
+ * @author Chris Stephenson
  */
 public abstract class Validator {
     

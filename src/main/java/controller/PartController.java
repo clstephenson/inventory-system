@@ -163,6 +163,7 @@ public class PartController {
             partIdTextField.setText(Integer.toString(Part.getNextPartID()));
         }
         Util.setFocusListenerForCurrencyFormat(priceTextField);
+        Util.setFocusListenerForEmptyNumericFields(minTextField, maxTextField, inventoryTextField);
     }
     
     protected void initData(Part part) {

@@ -97,7 +97,6 @@ public class Product {
     }
     
     public boolean removeAssociatedPart(int partID) {
-        //todo: implement removeAssociatedPart
         for(Part p : associatedParts) {
             if(p.getPartID() == partID)
                 return associatedParts.remove(p);
@@ -106,8 +105,11 @@ public class Product {
     }
     
     public Part lookupAssociatedPart(int partID) {
-        //todo: implement lookupAssociatedPart
-        throw new RuntimeException("not implemented");
+        for(Part p : associatedParts) {
+            if(p.getPartID() == partID)
+                return p;
+        }
+        return null;
     }
     
     public ObservableList<Part> getAssociatedParts() {

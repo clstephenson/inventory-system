@@ -112,7 +112,6 @@ public class Util {
      * @param node TextField to watch for focus
      */
     public static void setFocusListenerForCurrencyFormat(TextField node) {
-        //todo:  need to handle blank or non-numeric values
         node.focusedProperty().addListener((observable, oldValue, newValue) -> {
             // field has received focus
             if(newValue == true) {
@@ -133,11 +132,35 @@ public class Util {
                     // add currency formatting to the string
                     node.setText(NumberFormat.getCurrencyInstance().format(Double.parseDouble(node.getText())));
                 } else {
-                    Util.showErrorMessage("Please enter a numeric value for the price.");
-                    node.requestFocus();                    
+                    // if the price string is blank, set a default value
+                    if(node.getText().isEmpty()) {
+                        node.setText("$0.00");
+                    } else {
+                        Util.showErrorMessage("Please enter a numeric value for the price.");
+                        node.requestFocus();
+                    }
                 }
             }
         });
+    }
+    
+    /**
+     * Set up a listener on a TextField nodes to check if the value is empty when the field 
+     * loses focus, and if so, set a default value of 0.
+     * @param nodes TextField nodes that require the listener
+     */
+    public static void setFocusListenerForEmptyNumericFields(TextField ... nodes) {
+        for (TextField node : nodes) {
+            node.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                // field has received focus
+                if (newValue == false) {
+                    // if the node text is blank, set a default value of 0
+                    if (node.getText().isEmpty()) {
+                        node.setText("0");
+                    }                    
+                }
+            });
+        }
     }
     
     /**
@@ -156,6 +179,12 @@ public class Util {
             return price.doubleValue();
     }
     
+    /**
+     * Copy items in an ObservableList object to a new ArrayList.  Note: object references
+     * will be copied into the new list, not copies of the objects.
+     * @param list The ObservableList to copy
+     * @return ArrayList 
+     */
     public static ArrayList getArrayListCopyOfObservableList(ObservableList list) {
         ArrayList copy = new ArrayList();
         list.forEach(item -> copy.add(item));
