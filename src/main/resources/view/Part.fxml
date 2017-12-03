@@ -55,7 +55,7 @@
          <children>
             <Label text="Inventory Stock" />
             <Region HBox.hgrow="ALWAYS" />
-            <TextField fx:id="inventoryTextField" prefWidth="175.0" promptText="Inventory Stock" />
+            <TextField fx:id="inventoryTextField" prefWidth="175.0" promptText="Inventory Stock" text="0" />
          </children>
          <padding>
             <Insets left="30.0" right="30.0" />
@@ -65,7 +65,7 @@
          <children>
             <Label text="Price/Cost" />
             <Region HBox.hgrow="ALWAYS" />
-            <TextField fx:id="priceTextField" prefWidth="175.0" promptText="Price/Cost" />
+            <TextField fx:id="priceTextField" prefWidth="175.0" promptText="Price/Cost" text="\$0.00" />
          </children>
          <padding>
             <Insets left="30.0" right="30.0" />
@@ -75,14 +75,14 @@
          <children>
             <Label text="Max" />
             <Region prefHeight="25.0" prefWidth="48.0" HBox.hgrow="ALWAYS" />
-            <TextField fx:id="maxTextField" prefWidth="50.0" promptText="Max" />
+            <TextField fx:id="maxTextField" prefWidth="50.0" promptText="Max" text="0" />
             <Label layoutX="50.0" layoutY="14.0" text="Min">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
             </Label>
             <Region layoutX="73.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
-            <TextField fx:id="minTextField" layoutX="223.0" layoutY="10.0" prefWidth="50.0" promptText="Min" />
+            <TextField fx:id="minTextField" layoutX="223.0" layoutY="10.0" prefWidth="50.0" promptText="Min" text="0" />
          </children>
          <padding>
             <Insets left="30.0" right="30.0" />
@@ -104,7 +104,7 @@
                <children>
                   <Label text="Machine ID" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <TextField fx:id="machineIdTextField" prefWidth="175.0" promptText="Machine ID" />
+                  <TextField fx:id="machineIdTextField" prefWidth="175.0" promptText="Machine ID" text="0" />
                </children>
                <padding>
                   <Insets left="30.0" right="30.0" />

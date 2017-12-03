@@ -37,9 +37,16 @@ public class PartValidator extends Validator {
     @Override
     protected boolean areValuesPresentAndCorrectTypes() {
         boolean ok = false;
-        if(super.validateIsNotEmpty(name, price, inventory) &&
-                super.validateIsNumeric(min, max, inventory, price, machineID)) {
-            ok = true;
+        if(machineID == null) {
+            if(super.validateIsNotEmpty(name, price, inventory, min, max) &&
+                    super.validateIsNumeric(min, max, inventory, price)) {
+                ok = true;
+            }
+        } else {
+            if(super.validateIsNotEmpty(name, price, inventory, min, max) &&
+                    super.validateIsNumeric(min, max, inventory, price, machineID)) {
+                ok = true;
+            }
         }
         return ok;
     }
