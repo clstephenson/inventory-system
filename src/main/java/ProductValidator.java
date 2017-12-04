@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import main.java.model.Part;
 
 /**
- *
- * @author Chris
+ * The ProductValidator class extends the Validator to add specific validation methods and fields for Product data
+ * @author Chris Stephenson
  */
 public class ProductValidator extends Validator {
     
@@ -16,6 +16,15 @@ public class ProductValidator extends Validator {
     private final String price;
     private final ArrayList<Part> productParts;
     
+    /**
+     * Constructor method to create a ProductValidator object.  All parameters are passed as strings, except for productParts.
+     * @param name
+     * @param min
+     * @param max
+     * @param inventory
+     * @param price
+     * @param productParts ArrayList containing a list of Part objects
+     */
     public ProductValidator(String name, String min, String max, String inventory, 
             String price, ArrayList<Part> productParts) {
         super();
@@ -27,6 +36,10 @@ public class ProductValidator extends Validator {
         this.productParts = productParts;
     }
     
+    /**
+     * Run the validation methods.
+     * @return true if fields are valid and false if any of the validations fail.
+     */
     @Override
     public boolean validate() {
         if(areValuesPresentAndCorrectTypes()) {
@@ -40,6 +53,10 @@ public class ProductValidator extends Validator {
         return super.isValid();
     }
     
+    /**
+     * Check that required fields have values and fields are of the correct data type (i.e. numeric).
+     * @return true if fields are valid and false if any of the validations fail.
+     */
     @Override
     protected boolean areValuesPresentAndCorrectTypes() {
         boolean ok = false;

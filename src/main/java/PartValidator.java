@@ -1,8 +1,8 @@
 package main.java;
 
 /**
- *
- * @author Chris
+ * The PartValidator class extends the Validator to add specific validation methods and fields for Part data
+ * @author Chris Stephenson
  */
 public class PartValidator extends Validator {
     
@@ -13,6 +13,15 @@ public class PartValidator extends Validator {
     private final String price;
     private final String machineID;
     
+    /**
+     * Constructor method to create a PartValidator object.  All parameters are passed as strings.
+     * @param name
+     * @param min
+     * @param max
+     * @param inventory
+     * @param price
+     * @param machineID pass null for this parameter if the part is an outsourced part.
+     */
     public PartValidator(String name, String min, String max, String inventory, String price, String machineID) {
         super();
         this.name = name;
@@ -23,6 +32,10 @@ public class PartValidator extends Validator {
         this.price = price.replace(",", "").replace("$", ""); //remove , and $ from price text
     }
     
+    /**
+     * Run the validation methods.
+     * @return true if fields are valid and false if any of the validations fail.
+     */
     @Override
     public boolean validate() {
         if(areValuesPresentAndCorrectTypes()) {
@@ -34,6 +47,10 @@ public class PartValidator extends Validator {
         return super.isValid();
     }
     
+    /**
+     * Check that required fields have values and fields are of the correct data type (i.e. numeric).
+     * @return true if fields are valid and false if any of the validations fail.
+     */
     @Override
     protected boolean areValuesPresentAndCorrectTypes() {
         boolean ok = false;

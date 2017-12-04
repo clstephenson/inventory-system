@@ -171,8 +171,9 @@ public class Util {
                 price = cf.parse(currencyFormattedString);
             } catch (ParseException ex) {
                 Util.showErrorMessage(ex.getMessage(), ex);
-            }
-            return price.doubleValue();
+            }            
+            return price.doubleValue(); 
+            //todo: fix possible null reference warning
     }
     
     /**
