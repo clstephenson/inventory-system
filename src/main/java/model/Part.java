@@ -19,7 +19,6 @@ public abstract class Part {
 
     public Part() {
         setPartID(getNextPartID());
-        //setPartID(0);
         setName("");
         setPrice(0.00);
         setInStock(0);
@@ -31,7 +30,6 @@ public abstract class Part {
     
     public Part(String name, double price, int inStock, int min, int max) {
         setPartID(getNextPartID());
-        //setPartID(partID);
         setName(name);
         setPrice(price);
         setInStock(inStock);

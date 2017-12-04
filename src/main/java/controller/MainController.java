@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -24,13 +23,7 @@ import main.java.model.Product;
 public class MainController {
     
     @FXML
-    private Button exitButton;
-
-    @FXML
     private TextField partSearchTextField;
-
-    @FXML
-    private Button partSearchButton;
 
     @FXML
     private TableView<Part> partsTable;
@@ -48,19 +41,7 @@ public class MainController {
     private TableColumn<Part, Double> partPriceTableColumn;
 
     @FXML
-    private Button addPartButton;
-
-    @FXML
-    private Button modifyPartButton;
-
-    @FXML
-    private Button deletePartButton;
-
-    @FXML
     private TextField productSearchTextField;
-
-    @FXML
-    private Button productSearchButton;
 
     @FXML
     private TableView<Product> productsTable;
@@ -76,15 +57,6 @@ public class MainController {
 
     @FXML
     private TableColumn<Product, Double> productPriceTableColumn;
-    
-    @FXML
-    private Button addProductButton;
-
-    @FXML
-    private Button modifyProductButton;
-
-    @FXML
-    private Button deleteProductButton;
     
     @FXML
     protected void handleExitButtonAction(ActionEvent event) {

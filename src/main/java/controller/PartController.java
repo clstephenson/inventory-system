@@ -3,11 +3,8 @@ package main.java.controller;
 import java.text.NumberFormat;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import main.java.Main;
 import main.java.PartValidator;
@@ -24,9 +21,6 @@ public class PartController {
     
     @FXML
     private RadioButton inHouseRadioButton;
-
-    @FXML
-    private ToggleGroup partTypeToggleGroup;
 
     @FXML
     private RadioButton outsourcedRadioButton;
@@ -54,21 +48,12 @@ public class PartController {
 
     @FXML
     private TextField machineIdTextField;
-
-    @FXML
-    private Button saveButton;
-
-    @FXML
-    private Button cancelButton;
     
     @FXML
     private HBox companyHBox;
     
     @FXML
     private HBox machineHBox;
-    
-    @FXML
-    private Label titleLabel;
     
     @FXML
     protected void handleSaveButtonAction(ActionEvent event) { 

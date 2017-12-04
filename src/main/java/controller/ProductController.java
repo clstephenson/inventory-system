@@ -1,20 +1,15 @@
 package main.java.controller;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import main.java.Main;
-import main.java.PartValidator;
 import main.java.ProductValidator;
 import main.java.Util;
 import main.java.Validator;
@@ -49,9 +44,6 @@ public class ProductController {
     private TextField partSearchTextField;
 
     @FXML
-    private Button partSearchButton;
-
-    @FXML
     private TableView<Part> availablePartsTable;
 
     @FXML
@@ -67,9 +59,6 @@ public class ProductController {
     private TableColumn<Part, Double> availPartsPriceTableColumn;
 
     @FXML
-    private Button addPartButton;
-
-    @FXML
     private TableView<Part> selectedPartsTable;
 
     @FXML
@@ -83,18 +72,6 @@ public class ProductController {
 
     @FXML
     private TableColumn<Part, Double> usedPartsPriceTableColumn;
-
-    @FXML
-    private Button deletePartButton;
-
-    @FXML
-    private Button saveButton;
-
-    @FXML
-    private Button cancelButton;
-    
-    @FXML
-    private Label titleLabel;
 
     @FXML
     void handleAddPartButtonAction(ActionEvent event) {  
