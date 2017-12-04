@@ -201,6 +201,7 @@ public class ProductController {
         //give focus back to search field and populate with the trimmed lowercase string
         partSearchTextField.setText(searchString);
         partSearchTextField.requestFocus();
+        partSearchTextField.selectAll();
     }
     
     /**

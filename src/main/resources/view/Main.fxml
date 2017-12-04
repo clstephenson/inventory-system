@@ -48,7 +48,7 @@
                               <Font size="16.0" />
                            </font></Label>
                         <Region HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="partSearchTextField" />
+                        <TextField fx:id="partSearchTextField" onAction="#handleSearchFieldEnterKeyPressed" />
                         <Button fx:id="partSearchButton" mnemonicParsing="false" onAction="#partSearchButtonAction" text="Search" HBox.hgrow="NEVER" />
                      </children>
                      <padding>
@@ -90,7 +90,7 @@
                               <Font size="16.0" />
                            </font></Label>
                         <Region HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="productSearchTextField" />
+                        <TextField fx:id="productSearchTextField" onAction="#handleSearchFieldEnterKeyPressed" />
                         <Button fx:id="productSearchButton" mnemonicParsing="false" onAction="#productSearchButtonAction" text="Search" HBox.hgrow="NEVER" />
                      </children>
                      <padding>

@@ -13,6 +13,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.java.Main;
@@ -59,6 +61,20 @@ public class MainController {
     private TableColumn<Product, Double> productPriceTableColumn;
     
     /**
+     * Event handler for when the enter key is pressed and the search text field has focus.
+     * @param event
+     */
+    @FXML
+    void handleSearchFieldEnterKeyPressed(ActionEvent event) {
+        TextField sourceField = (TextField)event.getSource();
+        if(sourceField == productSearchTextField){
+            performProductSearch();
+        } else if(sourceField == partSearchTextField) {
+            performPartSearch();
+        }
+    }
+    
+    /**
      * Event handler for when the exit button is clicked.
      * @param event
      */
@@ -73,6 +89,11 @@ public class MainController {
      */
     @FXML
     protected void partSearchButtonAction(ActionEvent event) {
+        performPartSearch();
+    }
+    
+    
+    private void performPartSearch() {
         String searchString = partSearchTextField.getText().trim().toLowerCase();
         
         //show all results if search field is blank
@@ -97,6 +118,7 @@ public class MainController {
         //give focus back to search field and populate with the trimmed lowercase string
         partSearchTextField.setText(searchString);
         partSearchTextField.requestFocus();
+        partSearchTextField.selectAll();
     }
     
     /**
@@ -105,6 +127,10 @@ public class MainController {
      */
     @FXML
     protected void productSearchButtonAction(ActionEvent event) {
+        performProductSearch();
+    }
+    
+    private void performProductSearch() {
         String searchString = productSearchTextField.getText().trim().toLowerCase();
         
         //show all results if search field is blank
@@ -129,6 +155,7 @@ public class MainController {
         //give focus back to search field and populate with the trimmed lowercase string
         productSearchTextField.setText(searchString);
         productSearchTextField.requestFocus();
+        productSearchTextField.selectAll();
     }
     
     /**
