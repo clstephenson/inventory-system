@@ -16,8 +16,8 @@ import main.java.model.Part;
 
 public class PartController {
 
-    private boolean isModifyPartView = false;
-    private Part currentPart;
+    private boolean isModifyPartView = false; // true indicates a new part
+    private Part currentPart; // object currently being modified
     
     @FXML
     private RadioButton inHouseRadioButton;
@@ -55,9 +55,13 @@ public class PartController {
     @FXML
     private HBox machineHBox;
     
+    /**
+     * Event handler for when the save button is clicked.
+     * @param event
+     */
     @FXML
     protected void handleSaveButtonAction(ActionEvent event) { 
-        //todo:  changed validation messages to be part/product specific - add machine id.
+        // get a PartValidator object to validate field values before saving.
         Validator validator = (PartValidator)Validator.getValidator(
                 Validator.ValidatorTypes.PART, 
                 partNameTextField.getText(), 
@@ -68,18 +72,23 @@ public class PartController {
                 inHouseRadioButton.isSelected() ? machineIdTextField.getText() : null,
                 null);
         if(validator.validate()) {
+            // validation passes, save the part
             if(isModifyPartView) {
                 saveModifiedPart();
             } else {
                 saveNewPart();
-            }
-        
+            }    
+            // close the current stage after saving the part
             Util.getStageFromActionEvent(event).close();
         } else {
+            // show the validation errors to the user
             Util.showErrorMessage(validator.getMessageAsString());
         }
     }
     
+    /**
+     * Update the current part object with the new data from the UI.
+     */
     private void saveModifiedPart() {
         if(currentPart instanceof InhousePart) {
             InhousePart currentInhousePart = (InhousePart)currentPart;
@@ -100,6 +109,9 @@ public class PartController {
         }
     }
     
+    /**
+     * Create a new InhousePart or OutsourcedPart from the data entered in the UI.
+     */
     private void saveNewPart() {
         if(inHouseRadioButton.isSelected()) {
             InhousePart currentPart = new InhousePart(                
@@ -124,6 +136,10 @@ public class PartController {
         }
     }
     
+    /**
+     * Event handler for when the cancel button is clicked.
+     * @param event
+     */
     @FXML
     protected void handleCancelButtonAction(ActionEvent event) {
         if(Util.askForUserConfirmation("Are you sure you'd like to cancel?")) {
@@ -131,26 +147,44 @@ public class PartController {
         }
     }
     
+    /**
+     * Event handler for when the radio button for inhouse part is clicked.
+     * @param event
+     */
     @FXML
     protected void handleInhouseRadioButtonAction(ActionEvent event) {
         companyHBox.setVisible(false);
         machineHBox.setVisible(true);
     }
     
+    /**
+     * Event handler for when the radio button for outsourced part is clicked.
+     * @param event
+     */
     @FXML
     protected void handleOutsourcedRadioButtonAction(ActionEvent event) {
         machineHBox.setVisible(false);
         companyHBox.setVisible(true);
     }
     
+    /**
+     * Initialization when the view is shown
+     */
     public void initialize() {
+        // if new part is requested, then pre-fill the part ID field with the next available ID.
         if(!isModifyPartView) {
             partIdTextField.setText(Integer.toString(Part.getNextPartID()));
         }
+        
+        // set up focus listeners on text fields to set formatting or default values
         Util.setFocusListenerForCurrencyFormat(priceTextField);
         Util.setFocusListenerForEmptyNumericFields(minTextField, maxTextField, inventoryTextField, machineIdTextField);
     }
     
+    /**
+     * initData is called from MainController to pass a Part object to this controller.
+     * @param part The part object to be modified.
+     */
     protected void initData(Part part) {
         isModifyPartView = true;
         currentPart = part;

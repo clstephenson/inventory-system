@@ -18,9 +18,9 @@ import main.java.model.Product;
 
 public class ProductController {
 
-    private Product currentProduct;
-    private ObservableList<Part> unmodifiedPartsList;
-    private boolean isModifyProductView = false;
+    private Product currentProduct; // current product being modified
+    private ObservableList<Part> unmodifiedPartsList; // original associated parts list to revert to if changes are cancelled
+    private boolean isModifyProductView = false; // true indicates new product
     
     @FXML
     private TextField productIdTextField;
@@ -73,6 +73,10 @@ public class ProductController {
     @FXML
     private TableColumn<Part, Double> usedPartsPriceTableColumn;
 
+    /**
+     * Event handler for when the add part button is clicked.
+     * @param event
+     */
     @FXML
     void handleAddPartButtonAction(ActionEvent event) {  
         if(availablePartsTable.getSelectionModel().getSelectedItem() == null) {
@@ -82,6 +86,10 @@ public class ProductController {
         }
     }
 
+    /**
+     * Event handler for when the cancel button is clicked.
+     * @param event
+     */
     @FXML
     void handleCancelButtonAction(ActionEvent event) {
         if(Util.askForUserConfirmation("Are you sure you'd like to cancel?")) {
@@ -90,10 +98,15 @@ public class ProductController {
                 currentProduct.getAssociatedParts().clear();
                 unmodifiedPartsList.forEach(p -> currentProduct.addAssociatedPart(p));
             }
+            // close the current window
             Util.getStageFromActionEvent(event).close();
         }
     }
 
+    /**
+     * Event handler for when the delete part button is clicked.
+     * @param event
+     */
     @FXML
     void handleDeletePartButtonAction(ActionEvent event) {
         if(Util.askForUserConfirmation("Are you sure you'd like to remove the selected part?")) {
@@ -105,8 +118,13 @@ public class ProductController {
         }
     }
 
+    /**
+     * Event handler for when the save button is clicked.
+     * @param event
+     */
     @FXML
     void handleSaveButtonAction(ActionEvent event) {
+        // get a ProductValidator object to validate field values before saving.
         Validator validator = (ProductValidator)Validator.getValidator(
                 Validator.ValidatorTypes.PRODUCT, 
                 productNameTextField.getText(), 
@@ -116,7 +134,8 @@ public class ProductController {
                 priceTextField.getText(), 
                 null,
                 Util.getArrayListCopyOfObservableList(currentProduct.getAssociatedParts()));
-        if(validator.validate()) {        
+        if(validator.validate()) { 
+            // validation passes, save the product
             currentProduct.setName(productNameTextField.getText());
             currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
             currentProduct.setMin(Integer.parseInt(minTextField.getText()));
@@ -127,22 +146,35 @@ public class ProductController {
             if(!isModifyProductView) {
                 Main.inventory.addProduct(currentProduct);
             }
+            // close the current stage after saving the part
             Util.getStageFromActionEvent(event).close();
         } else {
+            // show the validation errors to the user
             Util.showErrorMessage(validator.getMessageAsString());
         }                
     }
 
+    /**
+     * Event handler for when the search button is clicked.
+     * @param event
+     */
     @FXML
     void handleSearchButtonAction(ActionEvent event) {
         performPartsSearch();
     }
     
+    /**
+     * Event handler for when the enter key is pressed and the search text field has focus.
+     * @param event
+     */
     @FXML
     void handleSearchFieldEnterKeyPressed(ActionEvent event) {
         performPartsSearch();
     }
     
+    /**
+     * find the parts in inventory that match the text in the search text field
+     */
     private void performPartsSearch() {
         String searchString = partSearchTextField.getText().trim().toLowerCase();
                 
@@ -151,6 +183,7 @@ public class ProductController {
             reloadAvailablePartsTableData();
         } else {
             ObservableList<Part> searchResults = FXCollections.observableArrayList();
+            // iterate through all parts and if match is found, add it to searchresults.
             Main.inventory.getAllParts().forEach(p -> {
                 if (p.getName().toLowerCase().contains(searchString))  
                     searchResults.add(p);
@@ -191,19 +224,23 @@ public class ProductController {
         reloadAvailablePartsTableData();
         reloadSelectedPartsTableData();
     }
-    
-    
-    public void initialize() {      
+        
+    /**
+     * Initialization when the view is shown
+     */
+    public void initialize() {  
+        // if new product is requested, create a new Product object and set up the parts tables
         if(!isModifyProductView) {
             currentProduct = new Product();
             setupPartsTables();            
         }
+        // set up focus listeners on text fields to set formatting or default values
         Util.setFocusListenerForCurrencyFormat(priceTextField);  
         Util.setFocusListenerForEmptyNumericFields(minTextField, maxTextField, inventoryTextField);
     }
     
     /**
-     *initData is called from MainController to pass a product object to this controller.
+     * initData is called from MainController to pass a product object to this controller.
      * @param product The product object to be modified.
      */
     protected void initData(Product product) {

@@ -58,11 +58,19 @@ public class MainController {
     @FXML
     private TableColumn<Product, Double> productPriceTableColumn;
     
+    /**
+     * Event handler for when the exit button is clicked.
+     * @param event
+     */
     @FXML
     protected void handleExitButtonAction(ActionEvent event) {
         Util.getStageFromActionEvent(event).close();
     }
     
+    /**
+     * Event handler for when the part search button is clicked.
+     * @param event
+     */
     @FXML
     protected void partSearchButtonAction(ActionEvent event) {
         String searchString = partSearchTextField.getText().trim().toLowerCase();
@@ -72,6 +80,7 @@ public class MainController {
             reloadPartsTableData();
         } else {
             ObservableList<Part> searchResults = FXCollections.observableArrayList();
+            // iterate through all parts and if match is found, add it to searchresults.
             Main.inventory.getAllParts().forEach(p -> {
                 if (p.getName().toLowerCase().contains(searchString))  
                     searchResults.add(p);
@@ -90,6 +99,10 @@ public class MainController {
         partSearchTextField.requestFocus();
     }
     
+    /**
+     * Event handler for when the product search button is clicked.
+     * @param event
+     */
     @FXML
     protected void productSearchButtonAction(ActionEvent event) {
         String searchString = productSearchTextField.getText().trim().toLowerCase();
@@ -99,6 +112,7 @@ public class MainController {
             reloadProductsTableData();
         } else {
             ObservableList<Product> searchResults = FXCollections.observableArrayList();
+            // iterate through all products and if match is found, add it to searchresults.
             Main.inventory.getAllProducts().forEach(p -> {
                 if (p.getName().toLowerCase().contains(searchString))  
                     searchResults.add(p);
@@ -117,16 +131,28 @@ public class MainController {
         productSearchTextField.requestFocus();
     }
     
+    /**
+     * Event handler for when the add part button is clicked.
+     * @param event
+     */
     @FXML
     protected void addPartButtonAction(ActionEvent event) {
         openPartWindow(event, false);
     }
     
+    /**
+     * Event handler for when the modify part button is clicked.
+     * @param event
+     */
     @FXML
     protected void modifyPartButtonAction(ActionEvent event) {
         openPartWindow(event, true);
     }
-       
+     
+    /**
+     * Event handler for when the delete part button is clicked.
+     * @param event
+     */
     @FXML
     protected void deletePartButtonAction(ActionEvent event) {
         if(Util.askForUserConfirmation("Are you sure you'd like to delete the selected part?")) {
@@ -137,16 +163,29 @@ public class MainController {
         }
     }
     
+    /**
+     * Event handler for when the add product button is clicked.
+     * @param event
+     */
     @FXML
     protected void addProductButtonAction(ActionEvent event) {
         openProductWindow(event, false);
     }
     
+    /**
+     * Event handler for when the add product button is clicked.
+     * @param event
+     */
     @FXML
     protected void modifyProductButtonAction(ActionEvent event) {
         openProductWindow(event, true);
     }
     
+    /**
+     * Setup and show a new JavaFX stage using Part.fxml for the scene. 
+     * @param event
+     * @param modifyPart if true, then selected part data will be initialized in the controller object.
+     */
     protected void openPartWindow(ActionEvent event, boolean modifyPart) {
         String title = modifyPart ? "Modify Part" : "Add Part";
         Stage window = new Stage();
@@ -158,6 +197,7 @@ public class MainController {
             loader.setLocation(location);
             root = (Parent)loader.load(location.openStream());
             if(modifyPart) {
+                // get the controller and call the initData method to pass the selected part object prior to showing the window.
                 PartController controller = (PartController)loader.getController();
                 Part selectedPart = partsTable.getSelectionModel().getSelectedItem();
                 controller.initData(selectedPart);
@@ -179,6 +219,11 @@ public class MainController {
         partsTable.refresh();
     }
     
+    /**
+     * Setup and show a new JavaFX stage using Product.fxml for the scene. 
+     * @param event
+     * @param modifyProduct if true, then selected product data will be initialized in the controller object.
+     */
     protected void openProductWindow(ActionEvent event, boolean modifyProduct) {
         String title = modifyProduct ? "Modify Product" : "Add Product";
         Stage window = new Stage();
@@ -190,6 +235,7 @@ public class MainController {
             loader.setLocation(location);
             root = (Parent)loader.load(location.openStream());
             if(modifyProduct) {
+                // get the controller and call the initData method to pass the selected product object prior to showing the window.
                 ProductController controller = (ProductController)loader.getController();
                 Product selectedProduct = productsTable.getSelectionModel().getSelectedItem();
                 controller.initData(selectedProduct);
@@ -211,6 +257,10 @@ public class MainController {
         productsTable.refresh();
     }
     
+    /**
+     * Event handler for when the delete product button is clicked.
+     * @param event
+     */
     @FXML
     protected void deleteProductButtonAction(ActionEvent event) {
         if(Util.askForUserConfirmation("Are you sure you'd like to delete the selected product?")) {
@@ -226,17 +276,23 @@ public class MainController {
         }
     }
         
+    /**
+     * set up the part and product table column bindings and add currency formatting to the price columns.
+     */
     public void initialize() {
+        //set up bindings for part table
         partIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("partID"));
         partNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         partInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<>("inStock"));
         partPriceTableColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-                        
+            
+        // set up bindings for product table
         productIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("productID"));
         productNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         productInventoryTableColumn.setCellValueFactory(new PropertyValueFactory<>("inStock"));
         productPriceTableColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-               
+          
+        // display the price columns with currency formatting
         Util.setCurrencyFormattingOnTableColumn(partPriceTableColumn);
         Util.setCurrencyFormattingOnTableColumn(productPriceTableColumn);
         
