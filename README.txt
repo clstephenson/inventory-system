@@ -2,10 +2,13 @@ README file for Software I project
 Author: Chris Stephenson
 
 Project Package/Folder Structure:
-	main.java - contains main, util and validation classes
-	main.java.controller - contains FXML controller classes
-	main.java.model - contains object models from UML diagram
-	main.resources.view - contains FXML UI files
+	src directory - source files for application
+		main.java - contains main, util and validation classes
+		main.java.controller - contains FXML controller classes
+		main.java.model - contains object models from UML diagram
+		main.resources.view - contains FXML UI files
+	dist directory - documentation (javadoc) 
+
 
 Notes for grader:
 - Part and Product windows display as modal windows in front of the main application window.
