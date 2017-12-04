@@ -10,18 +10,22 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <VBox prefHeight="342.0" prefWidth="350.0" spacing="15.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controller.PartController">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="30.0">
          <children>
-            <Label fx:id="titleLabel" text="Add Part" />
-            <RadioButton fx:id="inHouseRadioButton" mnemonicParsing="false" onAction="#handleInhouseRadioButtonAction" selected="true" text="In-House">
+            <Label fx:id="titleLabel" prefHeight="25.0" prefWidth="111.0" text="Add Part">
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
+            <RadioButton fx:id="inHouseRadioButton" mnemonicParsing="false" onAction="#handleInhouseRadioButtonAction" prefHeight="17.0" prefWidth="74.0" selected="true" text="In-House">
                <toggleGroup>
                   <ToggleGroup fx:id="partTypeToggleGroup" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="outsourcedRadioButton" layoutX="38.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleOutsourcedRadioButtonAction" text="Outsourced" toggleGroup="$partTypeToggleGroup" />
+            <RadioButton fx:id="outsourcedRadioButton" layoutX="38.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleOutsourcedRadioButtonAction" prefHeight="17.0" prefWidth="88.0" text="Outsourced" toggleGroup="$partTypeToggleGroup" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -51,7 +55,7 @@
          <children>
             <Label text="Inventory Stock" />
             <Region HBox.hgrow="ALWAYS" />
-            <TextField fx:id="inventoryTextField" prefWidth="175.0" promptText="Inventory Stock" />
+            <TextField fx:id="inventoryTextField" prefWidth="175.0" promptText="Inventory Stock" text="0" />
          </children>
          <padding>
             <Insets left="30.0" right="30.0" />
@@ -61,7 +65,7 @@
          <children>
             <Label text="Price/Cost" />
             <Region HBox.hgrow="ALWAYS" />
-            <TextField fx:id="priceTextField" prefWidth="175.0" promptText="Price/Cost" />
+            <TextField fx:id="priceTextField" prefWidth="175.0" promptText="Price/Cost" text="\$0.00" />
          </children>
          <padding>
             <Insets left="30.0" right="30.0" />
@@ -71,14 +75,14 @@
          <children>
             <Label text="Max" />
             <Region prefHeight="25.0" prefWidth="48.0" HBox.hgrow="ALWAYS" />
-            <TextField fx:id="maxTextField" prefWidth="50.0" promptText="Max" />
+            <TextField fx:id="maxTextField" prefWidth="50.0" promptText="Max" text="0" />
             <Label layoutX="50.0" layoutY="14.0" text="Min">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
             </Label>
             <Region layoutX="73.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
-            <TextField fx:id="minTextField" layoutX="223.0" layoutY="10.0" prefWidth="50.0" promptText="Min" />
+            <TextField fx:id="minTextField" layoutX="223.0" layoutY="10.0" prefWidth="50.0" promptText="Min" text="0" />
          </children>
          <padding>
             <Insets left="30.0" right="30.0" />
@@ -100,7 +104,7 @@
                <children>
                   <Label text="Machine ID" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <TextField fx:id="machineIdTextField" prefWidth="175.0" promptText="Machine ID" />
+                  <TextField fx:id="machineIdTextField" prefWidth="175.0" promptText="Machine ID" text="0" />
                </children>
                <padding>
                   <Insets left="30.0" right="30.0" />

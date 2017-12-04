@@ -1,28 +1,26 @@
 package main.java.controller;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import main.java.Main;
+import main.java.ProductValidator;
 import main.java.Util;
+import main.java.Validator;
 import main.java.model.Part;
 import main.java.model.Product;
 
 public class ProductController {
 
-    private Product currentProduct;
-    private ObservableList<Part> unmodifiedPartsList;
-    private ObservableList<Part> partSearchResults;
-    private boolean isModifyProductView = false;
+    private Product currentProduct; // current product being modified
+    private ObservableList<Part> unmodifiedPartsList; // original associated parts list to revert to if changes are cancelled
+    private boolean isModifyProductView = false; // true indicates new product
     
     @FXML
     private TextField productIdTextField;
@@ -46,9 +44,6 @@ public class ProductController {
     private TextField partSearchTextField;
 
     @FXML
-    private Button partSearchButton;
-
-    @FXML
     private TableView<Part> availablePartsTable;
 
     @FXML
@@ -62,9 +57,6 @@ public class ProductController {
 
     @FXML
     private TableColumn<Part, Double> availPartsPriceTableColumn;
-
-    @FXML
-    private Button addPartButton;
 
     @FXML
     private TableView<Part> selectedPartsTable;
@@ -81,18 +73,10 @@ public class ProductController {
     @FXML
     private TableColumn<Part, Double> usedPartsPriceTableColumn;
 
-    @FXML
-    private Button deletePartButton;
-
-    @FXML
-    private Button saveButton;
-
-    @FXML
-    private Button cancelButton;
-    
-    @FXML
-    private Label titleLabel;
-
+    /**
+     * Event handler for when the add part button is clicked.
+     * @param event
+     */
     @FXML
     void handleAddPartButtonAction(ActionEvent event) {  
         if(availablePartsTable.getSelectionModel().getSelectedItem() == null) {
@@ -102,108 +86,169 @@ public class ProductController {
         }
     }
 
+    /**
+     * Event handler for when the cancel button is clicked.
+     * @param event
+     */
     @FXML
     void handleCancelButtonAction(ActionEvent event) {
-        if(isModifyProductView) {
-            // revert changes to associated parts
-            currentProduct.getAssociatedParts().clear();
-            for(Part p : unmodifiedPartsList) {
-                currentProduct.addAssociatedPart(p);
+        if(Util.askForUserConfirmation("Are you sure you'd like to cancel?")) {
+            if(isModifyProductView) {
+                // revert changes to associated parts
+                currentProduct.getAssociatedParts().clear();
+                unmodifiedPartsList.forEach(p -> currentProduct.addAssociatedPart(p));
             }
+            // close the current window
+            Util.getStageFromActionEvent(event).close();
         }
-        Util.getStageFromActionEvent(event).close();
     }
 
+    /**
+     * Event handler for when the delete part button is clicked.
+     * @param event
+     */
     @FXML
     void handleDeletePartButtonAction(ActionEvent event) {
-        if(selectedPartsTable.getSelectionModel().getSelectedItem() == null) {
-            Util.showErrorMessage("Please select a part to remove.");
-        } else {
-            currentProduct.removeAssociatedPart(selectedPartsTable.getSelectionModel().getSelectedItem().getPartID());
+        if(Util.askForUserConfirmation("Are you sure you'd like to remove the selected part?")) {
+            if(selectedPartsTable.getSelectionModel().getSelectedItem() == null) {
+                Util.showErrorMessage("Please select a part to remove.");
+            } else {
+                currentProduct.removeAssociatedPart(selectedPartsTable.getSelectionModel().getSelectedItem().getPartID());
+            }
         }
     }
 
+    /**
+     * Event handler for when the save button is clicked.
+     * @param event
+     */
     @FXML
     void handleSaveButtonAction(ActionEvent event) {
-        if(isModifyProductView) {
+        // get a ProductValidator object to validate field values before saving.
+        Validator validator = (ProductValidator)Validator.getValidator(
+                Validator.ValidatorTypes.PRODUCT, 
+                productNameTextField.getText(), 
+                minTextField.getText(), 
+                maxTextField.getText(), 
+                inventoryTextField.getText(), 
+                priceTextField.getText(), 
+                null,
+                Util.getArrayListCopyOfObservableList(currentProduct.getAssociatedParts()));
+        if(validator.validate()) { 
+            // validation passes, save the product
             currentProduct.setName(productNameTextField.getText());
-            NumberFormat cf = NumberFormat.getCurrencyInstance();
-            Number price = null;
-            try {
-                price = cf.parse(priceTextField.getText());
-            } catch (ParseException ex) {
-                Util.showErrorMessage(ex.getMessage(), ex);
+            currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
+            currentProduct.setMin(Integer.parseInt(minTextField.getText()));
+            currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
+            currentProduct.setPrice(Util.getDoubleFromCurrencyInstance(priceTextField.getText()));
+                
+            // if a new product, then add to the inventory
+            if(!isModifyProductView) {
+                Main.inventory.addProduct(currentProduct);
             }
-            currentProduct.setPrice(price.doubleValue());
-            currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
-            currentProduct.setMin(Integer.parseInt(minTextField.getText()));
-            currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
+            // close the current stage after saving the part
+            Util.getStageFromActionEvent(event).close();
         } else {
-            currentProduct.setName(productNameTextField.getText());
-            currentProduct.setInStock(Integer.parseInt(inventoryTextField.getText()));
-            currentProduct.setMin(Integer.parseInt(minTextField.getText()));
-            currentProduct.setMax(Integer.parseInt(maxTextField.getText()));
-            currentProduct.setPrice(Double.parseDouble(priceTextField.getText()));
-        }
-        
-        Util.getStageFromActionEvent(event).close();
+            // show the validation errors to the user
+            Util.showErrorMessage(validator.getMessageAsString());
+        }                
     }
 
+    /**
+     * Event handler for when the search button is clicked.
+     * @param event
+     */
     @FXML
     void handleSearchButtonAction(ActionEvent event) {
         performPartsSearch();
     }
     
+    /**
+     * Event handler for when the enter key is pressed and the search text field has focus.
+     * @param event
+     */
     @FXML
     void handleSearchFieldEnterKeyPressed(ActionEvent event) {
         performPartsSearch();
     }
     
+    /**
+     * find the parts in inventory that match the text in the search text field
+     */
     private void performPartsSearch() {
         String searchString = partSearchTextField.getText().trim().toLowerCase();
-        
-        //show all results if search field is blank
+                
         if(searchString.equals("")) {
-            availablePartsTable.setItems(Main.inventory.getAllParts());
+            //show all results if search field is blank
+            reloadAvailablePartsTableData();
         } else {
-            partSearchResults = FXCollections.observableArrayList();
+            ObservableList<Part> searchResults = FXCollections.observableArrayList();
+            // iterate through all parts and if match is found, add it to searchresults.
             Main.inventory.getAllParts().forEach(p -> {
                 if (p.getName().toLowerCase().contains(searchString))  
-                    partSearchResults.add(p);
+                    searchResults.add(p);
             });            
-            availablePartsTable.setItems(partSearchResults);
-            if(partSearchResults.isEmpty()) {
-                availablePartsTable.setPlaceholder(new Label("Search did not return any results."));
+            // if no results found, then show a message and reload the data
+            // otherwise, load the table with the search results
+            if(searchResults.isEmpty()) {
+                Util.showErrorMessage("Search did not return any results.");
+                reloadAvailablePartsTableData();
+            } else {
+                availablePartsTable.setItems(searchResults);
             }
         }
         
         //give focus back to search field and populate with the trimmed lowercase string
         partSearchTextField.setText(searchString);
         partSearchTextField.requestFocus();
+        partSearchTextField.selectAll();
     }
     
+    /**
+     * reset the available parts table to match inventory contents
+     */
+    private void reloadAvailablePartsTableData() {
+        availablePartsTable.setItems(Main.inventory.getAllParts());
+    }
     
-    public void initialize() {        
-        System.out.println("initialized called");
+    /**
+     * reset the selected parts table to match the current product associated parts
+     */
+    private void reloadSelectedPartsTableData() {
+        selectedPartsTable.setItems(currentProduct.getAssociatedParts());
+    }
+    
+    /**
+     * reset the contents of both parts tables
+     */
+    private void reloadBothPartsTables() {
+        reloadAvailablePartsTableData();
+        reloadSelectedPartsTableData();
+    }
+        
+    /**
+     * Initialization when the view is shown
+     */
+    public void initialize() {  
+        // if new product is requested, create a new Product object and set up the parts tables
         if(!isModifyProductView) {
             currentProduct = new Product();
             setupPartsTables();            
         }
-        Util.setFocusListenerForCurrencyFormat(priceTextField);        
+        // set up focus listeners on text fields to set formatting or default values
+        Util.setFocusListenerForCurrencyFormat(priceTextField);  
+        Util.setFocusListenerForEmptyNumericFields(minTextField, maxTextField, inventoryTextField);
     }
     
     /**
-     *initData is called from MainController to pass a product object to this controller.
+     * initData is called from MainController to pass a product object to this controller.
      * @param product The product object to be modified.
      */
     protected void initData(Product product) {
-        System.out.println("initData called");
         isModifyProductView = true;
         currentProduct = product;
         unmodifiedPartsList = FXCollections.observableArrayList();
-        for(Part p : product.getAssociatedParts()) {
-            unmodifiedPartsList.add(p);
-        }
+        product.getAssociatedParts().forEach(p -> unmodifiedPartsList.add(p));
         
         productIdTextField.setText(Integer.toString(product.getProductID()));
         productNameTextField.setText(product.getName());
@@ -234,8 +279,7 @@ public class ProductController {
         Util.setCurrencyFormattingOnTableColumn(availPartsPriceTableColumn);
         Util.setCurrencyFormattingOnTableColumn(usedPartsPriceTableColumn);
         
-        availablePartsTable.setItems(Main.inventory.getAllParts());
-        selectedPartsTable.setItems(currentProduct.getAssociatedParts());
+        reloadBothPartsTables();
     }
 
 }

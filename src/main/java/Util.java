@@ -1,19 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.java;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Random;
-import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -26,8 +24,9 @@ import main.java.model.Part;
 import main.java.model.Product;
 
 /**
- *
- * @author Chris
+ * Utility class to hold static helper methods and variables.
+ * 
+ * @author Chris Stephenson
  */
 public class Util {
     
@@ -58,6 +57,19 @@ public class Util {
                 new ScrollPane(new TextArea(sw.toString())));
         alert.showAndWait();
     }
+    
+    /**
+     * Display a confirmation dialog to the user
+     * @param message Message to be displayed
+     * @return true if OK button was pressed, otherwise false
+     */
+    public static boolean askForUserConfirmation(String message) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Please Confirm...");
+        confirmation.setContentText(message);
+        Optional<ButtonType> result = confirmation.showAndWait();
+        return result.get() == ButtonType.OK;
+    }
         
     /**
      * Get the stage object from where an actionEvent originates.
@@ -69,6 +81,11 @@ public class Util {
         return (Stage)srcNode.getScene().getWindow();
     }
     
+    /**
+     * Set up automatic currency formatting on all values in a specified table column. 
+     * @param <T> Type of the class contained in the TableView.items list
+     * @param col TableColumn object to format
+     */
     public static <T> void setCurrencyFormattingOnTableColumn(TableColumn col) {  
         col.setCellFactory(column -> {            
            return new TableCell<T, Double>() {
@@ -85,31 +102,89 @@ public class Util {
         });
     }
     
+    /**
+     * Set up a listener on a text field to automatically add currency formatting when the field 
+     * loses focus, and removes currency formatting when the field has focus.
+     * @param node TextField to watch for focus
+     */
     public static void setFocusListenerForCurrencyFormat(TextField node) {
-        //todo:  need to handle blank or non-numeric values
         node.focusedProperty().addListener((observable, oldValue, newValue) -> {
-
             // field has received focus
             if(newValue == true) {
-                NumberFormat cf = NumberFormat.getCurrencyInstance();                
+                NumberFormat cf = NumberFormat.getCurrencyInstance(); 
+                // check if the text matches a currency format
                 if(node.getText().matches("^\\$[0-9,]*\\.[0-9]*$")) {
                     try {
+                        // remove the currency formatting
                         node.setText(Double.toString(cf.parse(node.getText()).doubleValue()));
                     } catch (ParseException ex) {
                         Util.showErrorMessage(ex.getMessage(), ex);
                     }
-                }
-                
+                }                
             // field has lost focus
             } else {
+                // check for string representation of a double
                 if(node.getText().matches("^[0-9]+\\.?[0-9]*$")) {
+                    // add currency formatting to the string
                     node.setText(NumberFormat.getCurrencyInstance().format(Double.parseDouble(node.getText())));
                 } else {
-                    Util.showErrorMessage("Please enter a numeric value for the price.");
-                    node.requestFocus();                    
+                    // if the price string is blank, set a default value
+                    if(node.getText().isEmpty()) {
+                        node.setText("$0.00");
+                    } else {
+                        Util.showErrorMessage("Please enter a numeric value for the price.");
+                        node.requestFocus();
+                    }
                 }
             }
         });
+    }
+    
+    /**
+     * Set up a listener on a TextField nodes to check if the value is empty when the field 
+     * loses focus, and if so, set a default value of 0.
+     * @param nodes TextField nodes that require the listener
+     */
+    public static void setFocusListenerForEmptyNumericFields(TextField ... nodes) {
+        for (TextField node : nodes) {
+            node.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                // field has received focus
+                if (newValue == false) {
+                    // if the node text is blank, set a default value of 0
+                    if (node.getText().isEmpty()) {
+                        node.setText("0");
+                    }                    
+                }
+            });
+        }
+    }
+    
+    /**
+     * Get the numeric double value from a currency formatted string.  Example:  returns 5.0 for "$5.00".
+     * @param currencyFormattedString string formatted as currency (ex. "$5.00")
+     * @return double numeric value represented by the string
+     */
+    public static double getDoubleFromCurrencyInstance(String currencyFormattedString) {
+        NumberFormat cf = NumberFormat.getCurrencyInstance();
+            Number price = 0.00;
+            try {
+                price = cf.parse(currencyFormattedString);
+            } catch (ParseException ex) {
+                Util.showErrorMessage(ex.getMessage(), ex);
+            }            
+            return price.doubleValue(); 
+    }
+    
+    /**
+     * Copy items in an ObservableList object to a new ArrayList.  Note: object references
+     * will be copied into the new list, not copies of the objects.
+     * @param list The ObservableList to copy
+     * @return ArrayList 
+     */
+    public static ArrayList getArrayListCopyOfObservableList(ObservableList list) {
+        ArrayList copy = new ArrayList();
+        list.forEach(item -> copy.add(item));
+        return copy;
     }
     
     /**
@@ -126,17 +201,17 @@ public class Util {
         
         //load sample product data into inventory
         Main.inventory.addProduct(new Product("Motor Assembly", 2500.00, 5, 2, 8));
-        Main.inventory.addProduct(new Product("Turbine", 10350.00, 5, 2, 8));
-        Main.inventory.addProduct(new Product("Fan Assembly", 500.00, 5, 2, 8));
-        Main.inventory.addProduct(new Product("Gearbox", 950.00, 5, 2, 8));
+        Main.inventory.addProduct(new Product("Turbine", 10350.00, 6, 2, 8));
+        Main.inventory.addProduct(new Product("Fan Assembly", 500.00, 7, 2, 8));
+        Main.inventory.addProduct(new Product("Gearbox", 950.00, 8, 2, 8));
         
         //load a random associated part into each product
-        for(Product prod : Main.inventory.getAllProducts()) {
+        Main.inventory.getAllProducts().forEach((prod) -> {
             Random rand = new Random();
             int randomID = rand.nextInt(Main.inventory.getAllParts().size() - 1);
             Part part = Main.inventory.getAllParts().get(randomID);
             prod.addAssociatedPart(part);
-        }
+        });
         
     }
     
