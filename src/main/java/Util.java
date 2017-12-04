@@ -166,14 +166,13 @@ public class Util {
      */
     public static double getDoubleFromCurrencyInstance(String currencyFormattedString) {
         NumberFormat cf = NumberFormat.getCurrencyInstance();
-            Number price = null;
+            Number price = 0.00;
             try {
                 price = cf.parse(currencyFormattedString);
             } catch (ParseException ex) {
                 Util.showErrorMessage(ex.getMessage(), ex);
             }            
             return price.doubleValue(); 
-            //todo: fix possible null reference warning
     }
     
     /**
