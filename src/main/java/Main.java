@@ -16,7 +16,7 @@ public class Main extends Application {
     public static Inventory inventory;
     
     /**
-     * Main entry point for the application.
+     * Main entry point for the application where the inventory is initialized and sample data created.
      * @param args
      */
     public static void main(String[] args) {
