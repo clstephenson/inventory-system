@@ -1,14 +1,14 @@
 This was a basic JavaFX project that was course requirement for my degree.
 
-Project Package/Folder Structure:
-	src directory - source files for application
-		main.java - contains main, util and validation classes
-		main.java.controller - contains FXML controller classes
-		main.java.model - contains object models from UML diagram
-		main.resources.view - contains FXML UI files
-	dist directory - documentation (javadoc) 
+#### Project Package/Folder Structure
+- src directory - source files for application
+  - main.java - contains main, util and validation classes
+  - main.java.controller - contains FXML controller classes
+  - main.java.model - contains object models from UML diagram
+  - main.resources.view - contains FXML UI files
+- dist directory - documentation (javadoc) 
 
-Notes for grader:
+#### Notes
 - Part and Product windows display as modal windows in front of the main application window.
 
 - I combined the "Add" and "Modify" views, as well as the controllers.  Originally, I started with separate views and controllers for the AddPart/ModifyPart and AddProduct/ModifyProduct, but there was too much duplicated code.  Also, the views were pretty much identical, so I decided to combine them into one for Part and one for Product.
