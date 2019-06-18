@@ -1,6 +1,7 @@
-This was a basic JavaFX project that was course requirement for my degree.
+This was a basic JavaFX project that was course requirement for my degree. There was no external datasource for this 
+project. The sample data is hard-coded in the application.
 
-#### Project Package/Folder Structure
+## Project Package/Folder Structure
 - src directory - source files for application
   - main.java - contains main, util and validation classes
   - main.java.controller - contains FXML controller classes
@@ -8,7 +9,17 @@ This was a basic JavaFX project that was course requirement for my degree.
   - main.resources.view - contains FXML UI files
 - dist directory - documentation (javadoc) 
 
-#### Notes
+## Screenshots
+#### Main Window
+![alt text](https://clstephenson.s3-us-west-2.amazonaws.com/images/inventory-system-main.png "main window")
+
+#### Modify Project
+![alt text](https://clstephenson.s3-us-west-2.amazonaws.com/images/inventory-system-modifyProduct.png "modify project window")
+
+#### Modify Part
+![alt text](https://clstephenson.s3-us-west-2.amazonaws.com/images/inventory-system-modifyPart.png "modify part window")
+
+## Notes
 - Part and Product windows display as modal windows in front of the main application window.
 
 - I combined the "Add" and "Modify" views, as well as the controllers.  Originally, I started with separate views and controllers for the AddPart/ModifyPart and AddProduct/ModifyProduct, but there was too much duplicated code.  Also, the views were pretty much identical, so I decided to combine them into one for Part and one for Product.
@@ -24,7 +35,6 @@ This was a basic JavaFX project that was course requirement for my degree.
 - Searching... The search text boxes are set up to respond to the enter key.  After the search happens, the search text field receives focus, and the text is selected.  That allows the user to immediately start typing a new search.  If no results are found, then a message box displays.
 
 - Sample data... there is a method in the Util class that is called to load sample data into the inventory.   
-
 
 
 
