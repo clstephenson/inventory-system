@@ -11,13 +11,13 @@ project. The sample data is hard-coded in the application.
 
 ## Screenshots
 #### Main Window
-![alt text](https://clstephenson.s3-us-west-2.amazonaws.com/images/inventory-system-main.png "main window")
+![alt text](https://clstephenson.s3-us-west-2.amazonaws.com/apps/inventory-system/inventory-system-main.png "main window")
 
 #### Modify Project
-![alt text](https://clstephenson.s3-us-west-2.amazonaws.com/images/inventory-system-modifyProduct.png "modify project window")
+![alt text](https://clstephenson.s3-us-west-2.amazonaws.com/apps/inventory-system/inventory-system-modifyProduct.png "modify project window")
 
 #### Modify Part
-![alt text](https://clstephenson.s3-us-west-2.amazonaws.com/images/inventory-system-modifyPart.png "modify part window")
+![alt text](https://clstephenson.s3-us-west-2.amazonaws.com/apps/inventory-system/inventory-system-modifyPart.png "modify part window")
 
 ## Notes
 - Part and Product windows display as modal windows in front of the main application window.
